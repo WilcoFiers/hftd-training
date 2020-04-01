@@ -1,6 +1,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import AuthGuard from './AuthGuard'
+import Home from "@/views/Home.vue";
+import TrainingList from "@/views/TrainingList.vue";
+import ComingSoon from "@/views/ComingSoon.vue";
+
+import { userRoutes } from './user'
 
 Vue.use(VueRouter);
 
@@ -11,6 +16,18 @@ const routes = [
     component: Home
   },
   {
+    path: "/trainings",
+    name: "TrainingList",
+    component: TrainingList,
+    beforeEnter: AuthGuard
+  },
+  {
+    path: "/credit",
+    name: "Credit",
+    component: ComingSoon,
+    beforeEnter: AuthGuard
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting
@@ -18,7 +35,8 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
-  }
+  },
+  ...userRoutes,
 ];
 
 const router = new VueRouter({

@@ -1,0 +1,27 @@
+Port 1(1 QPU):
+- Initial connect
+- Connect to port 2
+- Redirect up to 1 QPU from port 1 to port 2
+- Add 1 node to Trace Route 1
+- Download data
+
+Port 2 (0 QPU):
+- Connect to port 1
+- Brute Force Tracing System 1, 7 damage, costs 2 QPU linked to port 2
+- Link 1 QPU to port 2
+- Download data
+
+Nodes in Tracing Route 1: 1/5
+
+
+t0 connect
+T1 Redirect 1QP to port 2
+T2 Add 1 node to trace route 1
+T3 connect to port 2
+T4 Link 1QPU to port 2
+T5 Brute force tracing system 1
+T6 ownload data
+T7 connect to port 1
+T8 download data
+T9 edit data
+
