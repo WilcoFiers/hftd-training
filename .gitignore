@@ -1,6 +1,8 @@
 .DS_Store
+.firebase
 node_modules
 /dist
+/logs
 
 # local env files
 .env.local

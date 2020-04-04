@@ -38,8 +38,6 @@ export const user: UserModules = {
     async emailSignIn({ commit, dispatch }, { email, password }) {
       await auth.signInWithEmailAndPassword(email, password);
       await dispatch("autoSignIn");
-
-      dispatch("bindCharacterList");
       commit("signedIn", true);
     },
 

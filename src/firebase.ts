@@ -4,14 +4,14 @@ import "firebase/firestore";
 
 // Get a Firestore instance
 export const firebaseApp = firebase.initializeApp({
-  apiKey: "AIzaSyC9UksAfuE2u48JTwfxW_eSjXfV5sPvQjU",
-  authDomain: "heimr-chars.firebaseapp.com",
-  databaseURL: "https://heimr-chars.firebaseio.com",
-  projectId: "heimr-chars",
-  storageBucket: "heimr-chars.appspot.com",
-  messagingSenderId: "409786001633",
-  appId: "1:409786001633:web:3c496047b36c83d5306fa0",
-  measurementId: "G-YZ5QQN5LXP"
+  apiKey: "AIzaSyBweIFy5EWPrSRHtaMqRT6YThxsZfS96OU",
+  authDomain: "hftd-training.firebaseapp.com",
+  databaseURL: "https://hftd-training.firebaseio.com",
+  projectId: "hftd-training",
+  storageBucket: "hftd-training.appspot.com",
+  messagingSenderId: "293633356436",
+  appId: "1:293633356436:web:e05117aa442ec422b0fa81",
+  measurementId: "G-B1XL40FS2X"
 });
 
 export const EmailAuthProvider = firebase.auth.EmailAuthProvider;

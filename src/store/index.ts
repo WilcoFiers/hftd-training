@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { RootState } from "./types";
-import { UserState } from './user'
+import { user, UserState } from './user'
 
 Vue.use(Vuex);
 
@@ -18,7 +18,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store<RootState>({
   state: defaultState,
-  // modules: { user, character, automata },
+  modules: { user },
 
   mutations: {
     // ...vuexfireMutations,

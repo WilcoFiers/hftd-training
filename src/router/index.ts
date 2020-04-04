@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import AuthGuard from './AuthGuard'
 import Home from "@/views/Home.vue";
 import TrainingList from "@/views/TrainingList.vue";
+import Training from "@/views/Training.vue";
 import ComingSoon from "@/views/ComingSoon.vue";
 
 import { userRoutes } from './user'
@@ -19,6 +20,12 @@ const routes = [
     path: "/trainings",
     name: "TrainingList",
     component: TrainingList,
+    beforeEnter: AuthGuard
+  },
+  {
+    path: "/trainings/:serverId",
+    name: "Training",
+    component: Training,
     beforeEnter: AuthGuard
   },
   {
