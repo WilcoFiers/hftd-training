@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { RootState } from "./types";
 import { user, UserState } from './user'
+import { vuexfireMutations } from "vuexfire";
 
 Vue.use(Vuex);
 
@@ -21,7 +22,7 @@ const store = new Vuex.Store<RootState>({
   modules: { user },
 
   mutations: {
-    // ...vuexfireMutations,
+    ...vuexfireMutations,
     setLoading: (state: RootState, val = true) => (state.loading = val)
   }
 });

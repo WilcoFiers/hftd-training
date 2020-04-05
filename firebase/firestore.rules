@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{document} {
+      allow create: if document == uid() && 
+      	!("roles" in request.resource.data) &&
+        request.resource.data.credit <= 10;
+
+      allow read: if document == uid() || isAdmin() == true;
+
+      allow update: if (document == uid() && request.resource.data.roles == null) ||
+        isAdmin() == true;
+
+      allow list: if isAdmin() == true;
+    }
+
+    function isAdmin() {
+      return getRole('admin')
+    }
+
+    function getRole(role) {
+      return get(/databases/$(database)/documents/users/$(uid())).data.roles[role]
+    }
+
+    function uid() {
+      return request.auth.uid
+    }
+
+    // function incomingData() {
+    //   return request.resource.data
+    // }
+
+    // function isSignedIn() {
+    //   return request.auth != null;
+    // }
+  }
+}

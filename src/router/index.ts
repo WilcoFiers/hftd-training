@@ -4,7 +4,8 @@ import AuthGuard from './AuthGuard'
 import Home from "@/views/Home.vue";
 import TrainingList from "@/views/TrainingList.vue";
 import Training from "@/views/Training.vue";
-import ComingSoon from "@/views/ComingSoon.vue";
+import Credit from "@/views/Credit.vue";
+// import ComingSoon from "@/views/ComingSoon.vue";
 
 import { userRoutes } from './user'
 
@@ -31,7 +32,7 @@ const routes = [
   {
     path: "/credit",
     name: "Credit",
-    component: ComingSoon,
+    component: Credit,
     beforeEnter: AuthGuard
   },
   {

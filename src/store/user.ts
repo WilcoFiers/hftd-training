@@ -1,9 +1,12 @@
-import { auth, EmailAuthProvider } from "@/firebase";
+import { auth, EmailAuthProvider, db, serverTimestamp } from "@/firebase";
+import { firestoreAction } from "vuexfire";
 import { RootModule } from "./types";
+import { User } from '@/types'
 
 export interface UserState {
   signedIn: boolean;
   displayName: string | null;
+  userData: User | undefined
 }
 
 export type UserModules = RootModule<UserState>;
@@ -11,7 +14,8 @@ export type UserModules = RootModule<UserState>;
 export const user: UserModules = {
   state: {
     signedIn: false,
-    displayName: null
+    displayName: null,
+    userData: undefined
   },
 
   mutations: {
@@ -28,17 +32,30 @@ export const user: UserModules = {
   actions: {
     async signUp({ dispatch }, { email, password, displayName }) {
       await auth.createUserWithEmailAndPassword(email, password);
-      await dispatch("emailSignIn", { email, password });
       const user = auth.currentUser;
-      if (user) {
-        user.updateProfile({ displayName });
+      if (!user) {
+        throw new Error('Failed to set up user account')
       }
+      user.updateProfile({ displayName });
+      try {
+        await db.doc(`users/${user.uid}`).set({
+          createdAt: serverTimestamp(),
+          lastUpdated: serverTimestamp(),
+          credit: 10
+        });
+      } catch (e) {
+        console.error(e)
+      }
+
+      await dispatch("emailSignIn", { email, password });
     },
 
     async emailSignIn({ commit, dispatch }, { email, password }) {
       await auth.signInWithEmailAndPassword(email, password);
       await dispatch("autoSignIn");
       commit("signedIn", true);
+
+      dispatch("bindUserData");
     },
 
     async autoSignIn({ commit, dispatch }) {
@@ -46,7 +63,7 @@ export const user: UserModules = {
       if (user) {
         commit("setDisplayName", user.displayName);
       }
-      await dispatch("bindCharacterList");
+      await dispatch("bindUserData");
       commit("signedIn", true);
     },
 
@@ -89,6 +106,15 @@ export const user: UserModules = {
 
     resetPassword(_, email) {
       return auth.sendPasswordResetEmail(email);
-    }
+    },
+
+    bindUserData: firestoreAction((context) => {
+      const userId = auth.currentUser?.uid
+      if (!userId) {
+        throw new TypeError('Unable to bind userData, user is not defined')
+      }
+      const ref =  db.doc(`users/${userId}`)
+      return context.bindFirestoreRef('userData', ref);
+    }),
   }
 };

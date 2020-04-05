@@ -16,6 +16,7 @@ export const firebaseApp = firebase.initializeApp({
 
 export const EmailAuthProvider = firebase.auth.EmailAuthProvider;
 export const auth = firebaseApp.auth();
+export const db = firebaseApp.firestore();
 
 export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 

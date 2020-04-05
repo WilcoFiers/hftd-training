@@ -3,8 +3,9 @@
     <v-row>
       <v-col cols="12" sm="9" md="8">
         <v-row>
-          <v-col>
+          <v-col class="d-flex justify-space-between">
             <h1>Settings</h1>
+            <v-btn @click="signOut" class="secondary">Sign out</v-btn>
           </v-col>
         </v-row>
         <v-row>
@@ -218,6 +219,11 @@ export default Vue.extend({
       } catch (e) {
         this.signInMessage = "The password is invalid, please try again.";
       }
+    },
+
+    signOut() {
+      this.$store.dispatch("signOut");
+      this.$router.push("/sign-in");
     }
   },
 
@@ -239,7 +245,7 @@ export default Vue.extend({
       return this.$refs.signInForm as Vue & {
         validate: () => boolean;
       };
-    }
+    },
   }
 });
 </script>
