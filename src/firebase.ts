@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/database";
 
 // Get a Firestore instance
 export const firebaseApp = firebase.initializeApp({
@@ -17,6 +18,7 @@ export const firebaseApp = firebase.initializeApp({
 export const EmailAuthProvider = firebase.auth.EmailAuthProvider;
 export const auth = firebaseApp.auth();
 export const db = firebaseApp.firestore();
+export const serverTimeRef = firebaseApp.database().ref(".info/serverTimeOffset");
 
 export const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 

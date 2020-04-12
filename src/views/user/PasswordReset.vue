@@ -41,7 +41,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapActions } from "vuex";
 import ErrorMessage from "@/components/ErrorMessage.vue";
 
 export default Vue.extend({

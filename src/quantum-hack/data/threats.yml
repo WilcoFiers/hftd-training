@@ -1,0 +1,23 @@
+simple_tracing_program:
+    name: "Simple Tracing Program"
+    initial: |
+        At the start of T{{ start }}, Security System {{ security_system }} starts tracing you.
+        It needs {{ type.health }} damage to be brute forced.
+    health: 6
+    steps:
+    -   time: 2
+        action: "trace_route"
+        value: 1
+    -   time: 3
+        action: "trace_route"
+        value: 1
+    -   time: 4
+        action: "trace_route"
+        value: 1
+
+simple_complete_security_log:
+    name: "Simple Complete Security Log"
+    initial: |
+        At the start of T{{ start }}, Port {{ port }} creates a security log. Edit its data to edit all your activities out.
+        After 6 ticks you will be traced, even if all QAIs are disconnected.
+    health: 1

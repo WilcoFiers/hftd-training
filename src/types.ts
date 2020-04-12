@@ -8,4 +8,3 @@ export interface User {
   email: string;
   roles: Roles;
 }
-

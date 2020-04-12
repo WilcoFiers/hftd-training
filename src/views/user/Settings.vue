@@ -5,7 +5,10 @@
         <v-row>
           <v-col class="d-flex justify-space-between">
             <h1>Settings</h1>
-            <v-btn @click="signOut" class="secondary">Sign out</v-btn>
+            <v-btn @click="signOut" class="secondary">
+              <v-icon left>mdi-logout</v-icon>
+              Sign out
+            </v-btn>
           </v-col>
         </v-row>
         <v-row>

@@ -1,135 +1,316 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-card>
-          <v-card-title>Input</v-card-title>
-          <v-card-text>
-            <div class="inputBox" v-if="!initiated">
-              <v-btn @click="initiate">~initiate server scan</v-btn>
-            </div>
-            <div class="inputBox" v-else>
-              <label v-for="tick in ticks" :key="tick.label" class="inputLabel">
-                {{tick.label}}:
-                <input type="text" v-model="tick.value" />
-              </label>
-              <v-btn class="mt-3">~run</v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-card>
-          <v-card-title>System Output</v-card-title>
-          <v-card-text>
-            <textarea readonly v-text="output" class="outputBox" ref="outputBox" />
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="mx-md-n4 mt-md-n4 section-container section-column">
+    <section class="input">
+      <!-- toolbar -->
+      <div class="d-flex justify-space-between toolbar">
+        <div class="btn-bar">
+          <v-btn @click="run" :disabled="!playerAICanPlan"><v-icon left>mdi-play</v-icon>Run</v-btn>
+          <v-btn @click="reset" :disabled="!playerAICanPlan"><v-icon left>mdi-undo-variant</v-icon>Reset</v-btn>
+        </div>
+        <div class="flex-grow-1 flex-grow-1">
+          <v-btn 
+            v-for="(player, index) in quantumServer.players" 
+            :key="index"
+            :class="playerTabsActive[index] && 'primary--text active'"
+            :aria-pressed="playerTabsActive[index] ? 'true' : 'false'"
+            v-ripple="{ class: playerTabsActive[index] && 'primary--text' }"
+            v-text="(player.isHost ? `[host] ` : '') + player.displayName"
+            @click="togglePlayerTab(index)"
+          />
+        </div>
+        <Timer 
+          v-if="!quantumServer.endTime"
+          :duration="quantumServer.duration" 
+          :startTime="startTime"
+          ref="timer"
+          @timeout="createReport" 
+        />
+        <Timer v-else :duration="quantumServer.endTime"  />
+      </div>
+
+      <div  v-if="!startTime" class="flex-grow-1 d-flex justify-space-around align-center">
+        <v-btn @click="addPlayerAI" v-if="!playerAI">Join as an AI</v-btn>
+        <v-btn @click="initiate" v-else-if="playerAI.isHost">~Initiate scan</v-btn>
+        <p v-else>Waiting for the host to initiate server scan</p>
+      </div>
+      <div  v-else class="flex-grow-1 d-flex">
+        <div v-for="(player, index) in activePlayerTabs" :key="index" class="content">
+          <textarea 
+            v-if="player === playerAI"
+            :readonly="!playerAICanPlan"
+            v-model="playerPlans"
+            @input="updatePlayerPlan($event.target.value)"
+          />
+          <textarea v-else :value="player.plans" readonly />
+        </div>
+      </div>
+    </section>
+
+    <section class="output">
+      <v-tabs v-model="serverTab" vertical>
+        <v-tab v-for="server in serverTabs" :key="server.name" v-text="server.name" :disabled="server.disabled" />
+      </v-tabs>
+      <div class="content overflow-auto">
+        <pre v-text="serverTabs[serverTab].content" />
+      </div>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-
-const startingText = `
-Welcome to practice <server> two!
-The text you are reading currently is the publicly available text this server gives users that <ping> it.
-
-This server is designed to guide the user into teaching the basics of <Quantum Hacking>.
-It is designed to be hacked by 1 hacker, but can be tackled by a team if you prefer to learn together.
-
-After reading these pages you should type "~initiate server scan" to start the hack.
-
-This will initiate a scan of the server so you know what access ports the server has and what <actions> can be taken on those <ports>.
-
-Be careful though! as soon as you initiate the server scan, the system will try and <trace> you.
-`.trim()
-
-const scanResults = `
-Let’s take a look at an initial scan:
-
-Port 1(1 QPU):
-- Initial connect
-- Connect to port 2
-- Redirect up to 1 QPU from port 1 to port 2
-- Add 1 node to Trace Route 1
-- Download data
-
-Port 2 (0 QPU):
-- Connect to port 1
-- Brute Force Tracing System 1, 7 damage, costs 2 QPU linked to port 2
-- Link 1 QPU to port 2
-- Download data
-
-Nodes in Tracing Route 1: 1/5
-
-At the start of T3 Tracing System 1 becomes active, it requires 7 damage to be destroyed.
-At the end of T3 Tracing System 1 traces 1 node
-At the end of T5 Tracing System 1 traces 5 nodes
-At the start of T4 a Security Log is created in Port 1. If not changed before the start of T9, it will trace you, even if all AI are disconnected.
-
-As you can see there are some things going on. Tracing System 1 is fast but it isn't able to trace through many nodes at the start. Luckily we can add a node to Tracing Route 1 from Port 1, it’ll buy us some time. As you can see, the Brute Force attack from Port 2 is expensive, it costs 2 QPU, one of which we can redirect from Port 1. The other you’ll have to link up. Right now your computer can only link up 1 QPU to this server, but other servers might have a higher capacity and we are also working on some upgrades that you could buy that would make it so you can link more QPU to the target server. Keep earning those BitMint!
-
-Try and think of the solution to this server yourself for now or scroll down for the solution. Your goal is to download the data on both ports! And try and use the new bot commands to input your plan:
-
-If you think you found a solution type ~begin plan to start inputting your plan. If you want to stop inputting stuff into your plan type ~end plan.
-
-If you want to check your current plan simply type ~plan
-
-If you want to run the eventual plan type ~run.
-Let’s look at the Plan that will crack this server:
-`.trim()
+import { parseCommands } from '@/quantum-hack/commands'
+import { generate } from '@/quantum-hack/report'
+import { QuantumServer, Player, Command } from '@/quantum-hack/types'
+import Timer from '@/components/Timer.vue'
+import { formattedTime } from '@/utils/formatTime'
 
 const planDefaults: string[] = [
   'T0: Initial connect',
-  'T1: Connect to port 2',
-  'T2: Download data',
-  'T3: Brute force',
-  'T4: Connect to port 1 ',
-  'T5: Download data',
-  'T6: Edit data',
-  'T7: disconnect',
+  'T1: '
 ]
 
-type Tick = {
-  label: string,
-  value: string
-}
-
-const ticks: Tick[] = []
-for (let i = 0; i < 10; i++) {
-  ticks.push({
-    label: `t${i}`,
-    value: planDefaults[i] || ''
-  })
+type Tab = {
+  name: string;
+  content: string;
+  readonly?: boolean;
+  disabled?: boolean;
 }
 
 export default Vue.extend({
   name: 'Training',
+  components: { Timer },
   data() {
     return {
-      output: startingText,
       initiated: false,
-      ticks
+      report: '',
+      playerPlans: undefined as undefined | string,
+      threats: [] as string[],
+      priorities: [] as string[],
+      playerTabsActive: [true] as boolean[],
+      serverTab: 0,
+    }
+  },
+
+  computed: {
+    quantumServer(): QuantumServer {
+      return this.$store.getters.quantumServer
+    },
+
+    startTime(): number {
+      const { serverTimeOffset } = this.$store.state.quantumServer
+      const { startTime } = this.quantumServer
+      if (typeof serverTimeOffset === 'number' && startTime) {
+        return Math.round(startTime.seconds - (serverTimeOffset / 1000))
+      } 
+      return 0
+    },
+
+    serverTabs(): Tab[] {
+      const { welcome_message, scan_result, report } = this.quantumServer
+      const initiated = !!this.startTime
+      const hasReport = !!report
+      const threatText = 'There are currently no threats.'
+
+      return [
+        { name: 'Ping', content: welcome_message },
+        { name: 'Scan', content: scan_result, disabled: !initiated },
+        { name: `Threats (${this.threats.length})`, content: threatText, disabled: !initiated },
+        { name: 'Report', content: report || '', disabled: !hasReport },
+      ]
+    },
+
+    activePlayerTabs(): Player[] {
+      return (this.quantumServer.players || []).filter((_, index) => {
+        return this.playerTabsActive[index];
+      })
+    },
+
+    playerAI(): Player | undefined {
+      const userId: string = this.$store.state.user.uid;
+      if (this.quantumServer.players) {
+        return this.quantumServer.players.find(player => player.id === userId)
+      }
+      return undefined;
+    },
+
+    playerAICanPlan(): boolean {
+      if (!this.playerAI) {
+        return false;
+      }
+      const { plans, completeTime } = this.playerAI;
+      return (
+        !!this.startTime && // initiated
+        plans !== undefined && // Plan has loaded
+        !completeTime // Player hasn't pressed "run"
+      )
+    },
+
+    playerAIIsLast(): boolean {
+      const players = (this.quantumServer.players as Player[])
+      return players.every(player => {
+        if (player.id === this.playerAI?.id) {
+          return !player.completeTime
+        }
+        return player.completeTime
+      })
     }
   },
 
   methods: {
-    initiate() {
-      this.output += scanResults
-      this.initiated = true
+    addPlayerAI() {
+      const plans = 'T00: connect\nT01: '
+      const displayName: string = this.$store.state.user.displayName
+      this.$store.dispatch('updateServerPlayer', { plans, displayName })
+    },
+
+    async initiate() {
+      await this.$store.dispatch('initiateServerScan')
 
       // @ts-ignore
-      const outputBox = this.refs.outputBox
-      outputBox.scrollTop = outputBox.scrollHeight;
+      this.$refs.timer.start()
+      this.serverTab = 1 // Switch to 'scan' tab
+    },
+
+    togglePlayerTab(index:number) {
+      this.$set(this.playerTabsActive, index, !this.playerTabsActive[index])
+    },
+
+    updatePlayerPlan(plans: string) {
+      this.$store.dispatch('updateServerPlayer', { plans })
+    },
+
+    async run() {
+      if (!this.playerAI) {
+        throw new Error('Unable to run, player is unknown')
+      }
+      
+      // Await to ensure the server is fully updated before generating the report
+      await this.$store.dispatch('updateServerPlayer', {
+        plans: this.playerPlans,
+        completeTime: Date
+      })
+
+      if (this.playerAIIsLast) {
+        this.createReport(true)
+      }
+    },
+
+    createReport(success?: boolean) {
+      if (!this.playerAI || this.playerPlans === undefined) {
+        return
+      }
+
+      // @ts-ignore
+      this.$refs.timer.pause();
+      // @ts-ignore
+      const endTime = formattedTime(this.$refs.timer.timePassed)
+      const { threats, name } = this.quantumServer
+
+      const players: Player[] = (this.quantumServer.players || []).concat();
+      players.sort((a, b): number => {
+        return (a.completeTime?.seconds || 0) - (b.completeTime?.seconds || 0)
+      });
+      const priorities = players.map(player => player.displayName)
+
+      const plansMap: { [displayName: string]: Command[] } = {}
+      players.forEach(({ displayName, plans }: Player) => {
+        plansMap[displayName] = parseCommands(plans)
+      })
+
+      const message = (success
+        ? this.quantumServer.finished_success 
+        : this.quantumServer.finished_timeout
+      )
+      
+      const reportArr = generate(name, plansMap, threats, priorities)
+      const report = (message + '\n\n' + reportArr.join('\n')).trim()
+      this.$store.dispatch('updateQuantumServer', { report, endTime })
+    },
+
+    reset() {
+      this.playerPlans = planDefaults.join('\n')
+      this.updatePlayerPlan(this.playerPlans)
+    }
+  },
+
+  watch: {
+    playerAI: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (oldVal || !newVal) {
+          return;
+        }
+        // Set player plans only on initial input;
+        // After that the local copy is leading.
+        this.playerPlans = newVal.plans
+      }
     }
   }
 })
 </script>
 
 <style lang="scss" scoped>
+  .section-container {
+    --input-height: 50vh;
+    --border-size: 2px;
+
+    height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    section {
+      display: flex;
+
+      &.input {
+        flex-direction: column;
+        height: var(--input-height);
+        border-bottom: solid #555 var(--border-size);
+      }
+      &.output {
+        flex-direction: row;
+        height: calc(100% - var(--input-height) - var(--border-size));
+      }
+      .btn-bar {
+        height: 100%;
+        margin-right: 4px;  
+        .v-btn {
+          height: 100%;
+        }
+      }
+    }    
+  }
+
+  .v-tabs {
+    flex: 0;
+  }
+  .content {
+    flex: 1;
+    font-size: 14px;
+    position: relative;
+    > pre {
+      white-space: pre-line;
+      padding: 12px;
+    }
+    > textarea {
+      padding: 12px;
+      outline: none;
+      font-family: monospace;
+      color: white;
+      resize: none;
+      width: 100%;
+      height: 100%;
+      &:nth-child(n+2) {
+        border-left: solid #555 var(--border-size);
+      }
+      &:focus {
+        background-color: rgba(255,255,255,0.04)
+      }
+    }
+  }
+  .overflow-auto {
+    overflow: auto;
+  }
+
   .inputBox, .outputBox {
     height: calc(90vh - 160px);
     width:100%;
@@ -137,22 +318,10 @@ export default Vue.extend({
     border-radius: 4px;
     padding: 4px;
   }
-  .inputBox {
-    min-height:140px;
-    overflow-y: auto;
-    // display: flex;
-    // flex-direction: column;
-    // justify-content: flex-end;
+  .active {
+    border-bottom: 2px solid red;
   }
-  .inputLabel {
-    display: flex;
-    padding: 0 4px 4px;
-
-    input {
-      flex: 1;
-      background: rgba(255,255,255, 0.2);
-      padding: 2px 8px;
-      margin-left: 4px;
-    }
+  .toolbar {
+    min-height: 36px;
   }
 </style>

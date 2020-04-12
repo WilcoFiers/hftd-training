@@ -71,6 +71,6 @@ export default Vue.extend({
   );
 }
 .v-navigation-drawer.drawer {
-  background-color: rgba(1,1,1,0.1);
+  background-color: rgba(20,20,20,0.85);
 }
 </style>

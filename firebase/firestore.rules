@@ -15,6 +15,15 @@ service cloud.firestore {
       allow list: if isAdmin() == true;
     }
 
+    match /quantumServers/{document} {
+      allow read, write: if isSignedIn();
+
+      match /players/{document} {
+        // TODO: prevent editing from other players
+        allow read, write: if isSignedIn();
+      }
+    }
+
     function isAdmin() {
       return getRole('admin')
     }
@@ -31,8 +40,8 @@ service cloud.firestore {
     //   return request.resource.data
     // }
 
-    // function isSignedIn() {
-    //   return request.auth != null;
-    // }
+    function isSignedIn() {
+      return request.auth != null;
+    }
   }
 }

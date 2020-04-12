@@ -10,7 +10,7 @@
           </v-card-title>
           <v-list>
             <v-list-item v-for="(server, index) in training.servers" :key="index"
-            :to="`/trainings/${server.serverId}`">
+            @click="newServerModal(server.name)">
               <v-list-item-icon>
                 <v-icon v-if="server.locked">mdi-lock</v-icon>
                 <v-icon v-else-if="server.complete">mdi-check-bold</v-icon>
@@ -23,33 +23,54 @@
         </v-card>
       </v-col>
     </v-row>
-  </v-container>    
+    <v-dialog v-model="serverSetupDialog" :overlay-opacity="0.7" max-width="600">
+      <ServerSetupForm 
+        :serverName="serverName"
+        @create="createServer($event)"
+      />
+    </v-dialog>
+  </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import ServerSetupForm from '@/components/ServerSetupForm.vue'
+import { QuantumServer } from '@/quantum-hack/types'
+
 export default Vue.extend({
   name: 'TrainingList',
+  components: { ServerSetupForm },
   data() {
     return {
+      serverSetupDialog: false as boolean,
+      serverName: '' as string,
       trainings: [
         {
           name: 'Beginner Servers',
           servers: [{
-              name: 'Beginner, level 1',
-              serverId: 'oij32fpajwf3p09j',
-              complete: true
+              name: 'Training Server #1',
+              // complete: true
             }, {
-              name: 'Beginner, level 2',
-              serverId: 'f9083j98a3fjponawf3'
+              name: 'Training Server #2',
             }, {
-              name: 'Beginner, level 3',
-              serverId: 'p09a82uopijawmx',
-              locked: true
+              name: 'Training Server #3',
+              // locked: true
             }
           ]
         }
       ]
+    }
+  },
+
+  methods: {
+    newServerModal(name: string) {
+      this.serverName = name
+      this.serverSetupDialog = true;
+    },
+
+    async createServer(quantumServer: QuantumServer) {
+      const serverId = await this.$store.dispatch('createQuantumServer', quantumServer)
+      this.$router.push(`/trainings/${serverId}`)
     }
   }
 })

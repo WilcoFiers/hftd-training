@@ -1,0 +1,74 @@
+name: "Training Server #2"
+duration: "10:00"
+welcome_message: |
+    Welcome to practice <server> two!
+    The text you are reading currently is the publicly available text this server gives users that <ping> it.
+
+    This server is designed to guide the user into teaching the basics of <Quantum Hacking>.
+    It is designed to be hacked by 1 hacker, but can be tackled by a team if you prefer to learn together.
+
+    After reading these pages you should type `~initiate server scan` to start the hack.
+
+    This will initiate a scan of the server so you know what access ports the server has and what <actions> can be taken on those <ports>.
+
+    Be careful though! as soon as you initiate the server scan, the system will try and <trace> you.
+
+scan_result: |
+    Scan Result:
+
+    Port 1:
+    - Initial connect
+    - Connect to port 2
+    - Upload data
+    - Download data
+    - Edit data
+
+    Port 2
+    - Connect to port 1
+    - Brute force security system 1, 3 damage, costs 0 QPU
+    - Upload data
+    - Download data
+    - Edit data
+
+    And after a few seconds the computer will blurt warnings to you. Stuff like:
+
+    ### THREAT DETECTED ###
+    At the start of tick 1, security system 1 starts to track you and needs 6 damage to be brute forced.
+    After 5 ticks you will be traced.
+
+    And
+
+    ### THREAT DETECTED ###
+    At the start of tick 3, Port 1 creates a security log. Edit it's data to edit all your activities out.
+    After 6 ticks you will be traced, even if all AI’s are disconnected.
+
+    Now it is your turn to type commands in 10 minutes. You can type command like this:
+
+    T0: Initial connect <- This is always the first command you do, it connects you to one of the ports
+    T1: Connect to port 2 <- This connects you to port 2, where there are more commands available to you.
+    T2: Brute force <- This brute forces the security system doing it 3 damage.
+    T3: Brute force <- This does the security system another 3 damage, which is enough to crack it! In time for the 5 turn deadline.
+    T4: Download data <- This downloads any data on port 2. Your AI will send this data to you if the hack is successful
+    T5: Connect to port 1 <- You need to connect to port 1 to perform actions there
+    T6: Edit data <- This erases anything you did from the log, stopping people from tracing your AI afterwards.
+    T7: <- You can leave these empty for now, as we don't need the last three commands. You don't even need to type them.
+    T8:
+    T9:
+    T10: Disconnect <- This is always the command given at T10. You don't even need to type it. Your quantum program will automatically disconnect after 11 ticks.
+
+finished_success: |
+    Congratulations, you just completed your second hack!
+
+finished_timout: |
+    Oops! You ran out of time. Your QAI is now executing the last plan you submitted.
+
+threats:
+-   time: "0:30"
+    type: simple_tracing_program
+    start: 1
+    security_system: 1
+    target: 1
+-   time: "1:00"
+    type: simple_complete_security_log
+    start: 3
+    port: 1

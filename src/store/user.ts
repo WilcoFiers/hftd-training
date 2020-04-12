@@ -5,8 +5,9 @@ import { User } from '@/types'
 
 export interface UserState {
   signedIn: boolean;
-  displayName: string | null;
+  displayName: string | undefined;
   userData: User | undefined
+  uid: string | undefined
 }
 
 export type UserModules = RootModule<UserState>;
@@ -14,13 +15,17 @@ export type UserModules = RootModule<UserState>;
 export const user: UserModules = {
   state: {
     signedIn: false,
-    displayName: null,
-    userData: undefined
+    displayName: undefined,
+    userData: undefined,
+    uid: undefined
   },
 
   mutations: {
     signedIn: (state, val = true) => (state.signedIn = val),
-    setDisplayName: (state, val) => (state.displayName = val)
+    setUserProps: (state, { displayName, uid}) => {
+      state.uid = uid
+      state.displayName = displayName
+    }
   },
 
   getters: {
@@ -61,7 +66,7 @@ export const user: UserModules = {
     async autoSignIn({ commit, dispatch }) {
       const user = auth.currentUser;
       if (user) {
-        commit("setDisplayName", user.displayName);
+        commit("setUserProps", user);
       }
       await dispatch("bindUserData");
       commit("signedIn", true);
