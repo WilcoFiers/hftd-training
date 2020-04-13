@@ -1,4 +1,3 @@
-- Seems to be an additional tick
 - Ensure timeouts only get triggered from the host
 - Put a line between the textareas
 - In output, Automatically navigate to the last available tab
@@ -8,6 +7,7 @@
 - Allow someone to remove themselves as AI
 - Add the host as an AI on creation
 - Give the input bar a background color, possibly a bottom border
+- Add support for basic threats
 
 -- Go to public Alpha
 

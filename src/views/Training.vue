@@ -35,7 +35,7 @@
           <p>
             <TextCopy :text="currentURL" />
           </p>
-          <v-btn @click="initiate">~Initiate scan</v-btn>
+          <v-btn @click="initiate">~initiate server scan</v-btn>
         </template>
         <p v-else>Waiting for the host to initiate server scan</p>
       </div>
@@ -234,8 +234,8 @@ export default Vue.extend({
         : this.quantumServer.finished_timeout
       )
       
-      const reportArr = generate(name, plansMap, threats, priorities)
-      const report = (message + '\n\n' + reportArr.join('\n')).trim()
+      const AAR = generate(name, plansMap, threats, priorities)
+      const report = (message + '\n\n' + AAR).trim()
       this.$store.dispatch('updateQuantumServer', { report, endTime })
     },
 

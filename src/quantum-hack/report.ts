@@ -4,7 +4,7 @@ import { header, tick_begin, tick_end, footer } from './data/report';
 type MemberTick = { member: string; command: Command }[]
 type ThreatTick = { threat: Threat, step: ThreatStep }[]
 
-export function generate(server_name = 'unknown', plans: Plans, threats: Threat[], priorities: string[]): string[] {
+export function generate(server_name = 'unknown', plans: Plans, threats: Threat[], priorities: string[]): string {
   const threat_active_ticks: Threat[][] = []
   const context: string[] = [];
   const server = ''
@@ -37,11 +37,12 @@ export function generate(server_name = 'unknown', plans: Plans, threats: Threat[
     }
   }
 
-  const plan_length = 1 + Math.max(
+  const plan_length = Math.max(
     threat_action_ticks.length, 
     member_ticks.length, 
     threat_action_ticks.length
   )
+  console.log({ threat_action_ticks, member_ticks })
 
   // jinja2.Template(self.__template.data["header"])
   context.push(header.render({ server, plan_length, server_name }).trim())
@@ -89,5 +90,5 @@ export function generate(server_name = 'unknown', plans: Plans, threats: Threat[
   // jinja2.Template(self.__template.data["footer"])
   context.push(footer.render({ server }).trim())
 
-  return context;
+  return context.join('\n')
 }
