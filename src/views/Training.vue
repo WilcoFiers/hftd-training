@@ -157,7 +157,8 @@ export default Vue.extend({
       return (
         !!this.startTime && // initiated
         plans !== undefined && // Plan has loaded
-        !completeTime // Player hasn't pressed "run"
+        !completeTime && // Player hasn't pressed "run"
+        !this.quantumServer.report // The run hasn't ended
       )
     },
 
