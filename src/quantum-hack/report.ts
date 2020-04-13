@@ -42,7 +42,6 @@ export function generate(server_name = 'unknown', plans: Plans, threats: Threat[
     member_ticks.length, 
     threat_action_ticks.length
   )
-  console.log({ threat_action_ticks, member_ticks })
 
   // jinja2.Template(self.__template.data["header"])
   context.push(header.render({ server, plan_length, server_name }).trim())

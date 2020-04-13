@@ -69,6 +69,9 @@ export default Vue.extend({
       immediate: true,
       handler(newStartTime) {
         if (!newStartTime) {
+          if (this.timerInterval) {
+            this.stop()
+          }
           return;
         }
         const currentTime = Math.round(new Date().getTime() / 1000) 

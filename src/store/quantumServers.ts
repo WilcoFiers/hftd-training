@@ -40,7 +40,6 @@ export const quantumServer: QuantumServerModules = {
         ...currentServer,
         players: currentPlayers.map(player => {
           return {
-            isHost: currentServer.hostId === player.id,
             id: player.id,
             ...player
           }
@@ -67,6 +66,8 @@ export const quantumServer: QuantumServerModules = {
 
     bindCurrentServerPlayers: firestoreAction((context, serverId) => {
       const ref =  db.collection(`quantumServers/${serverId}/players`)
+        .orderBy("joined", "asc");
+
       return context.bindFirestoreRef('currentPlayers', ref);
     }),
 
@@ -132,6 +133,15 @@ export const quantumServer: QuantumServerModules = {
       } else {
         return docRef.update(data)
       }
+    },
+
+    deleteServerPlayer({ state }) {
+      const user = auth.currentUser;
+      if (!user) {
+        throw new Error('Unable to create a quantum computer. User is not signed in')
+      }
+      const docRef = db.doc(`quantumServers/${state.currentServerId}/players/${user.uid}`)
+      return docRef.delete()
     }
   }
 };

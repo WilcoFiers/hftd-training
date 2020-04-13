@@ -14,30 +14,33 @@
             :class="playerTabsActive[index] && 'primary--text active'"
             :aria-pressed="playerTabsActive[index] ? 'true' : 'false'"
             v-ripple="{ class: playerTabsActive[index] && 'primary--text' }"
-            v-text="(isHost ? `[host] ` : '') + player.displayName"
+            v-text="(playerIsHost(player) ? `[host] ` : '') + player.displayName"
             @click="togglePlayerTab(index)"
           />
         </div>
+        <Timer v-if="quantumServer.endTime" :duration="quantumServer.endTime"  />
         <Timer 
-          v-if="!quantumServer.endTime"
+          v-else
           :duration="quantumServer.duration" 
           :startTime="startTime"
           ref="timer"
           @timeout="createReport" 
         />
-        <Timer v-else :duration="quantumServer.endTime"  />
       </div>
 
-      <div  v-if="!startTime" class="flex-grow-1 d-flex flex-column justify-center align-center">
+      <div v-if="!startTime" class="flex-grow-1 d-flex flex-column justify-center align-center overflow-auto">
+        <v-btn @click="addPlayerAI" v-if="!playerAI">Join as an AI</v-btn>
         <template v-if="isHost">
-          <p>Others can join by going to the same URL:</p>
+          <p class="mt-4">Others can join by going to the same URL:</p>
           <p>
             <TextCopy :text="currentURL" />
           </p>
+          <v-btn @click="initiate">~initiate server scan</v-btn>
         </template>
-        <v-btn @click="addPlayerAI" v-if="!playerAI">Join as an AI</v-btn>
-        <v-btn  v-else-if="isHost" @click="initiate">~initiate server scan</v-btn>
-        <p v-else>Waiting for the host to initiate server scan</p>
+        <template v-else>
+          <p>Waiting for the host to initiate server scan</p>
+          <v-btn @click="removePlayerAI">Remove my AI</v-btn>
+        </template>
       </div>
       <div  v-else class="flex-grow-1 d-flex">
         <div v-for="(player, index) in activePlayerTabs" :key="index" class="content">
@@ -89,11 +92,7 @@ export default Vue.extend({
   components: { Timer, TextCopy },
   data() {
     return {
-      initiated: false,
-      report: '',
       playerPlans: undefined as undefined | string,
-      threats: [] as string[],
-      priorities: [] as string[],
       playerTabsActive: [true] as boolean[],
       serverTab: 0,
     }
@@ -114,7 +113,7 @@ export default Vue.extend({
     },
 
     serverTabs(): Tab[] {
-      const { welcome_message, scan_result, report } = this.quantumServer
+      const { welcome_message, scan_result, report, threats } = this.quantumServer
       const initiated = !!this.startTime
       const hasReport = !!report
       const threatText = 'There are currently no threats.'
@@ -122,7 +121,7 @@ export default Vue.extend({
       return [
         { name: 'Ping', content: welcome_message },
         { name: 'Scan', content: scan_result, disabled: !initiated },
-        { name: `Threats (${this.threats.length})`, content: threatText, disabled: !initiated },
+        { name: `Threats (${threats.length})`, content: threatText, disabled: !initiated },
         { name: 'Report', content: report || '', disabled: !hasReport },
       ]
     },
@@ -174,10 +173,18 @@ export default Vue.extend({
   },
 
   methods: {
+    playerIsHost(player: Player): boolean {
+      return this.quantumServer.hostId === player.id
+    },
+
     addPlayerAI() {
       const plans = 'T00: connect\nT01: '
       const displayName: string = this.$store.state.user.displayName
-      this.$store.dispatch('updateServerPlayer', { plans, displayName })
+      this.$store.dispatch('updateServerPlayer', { plans, displayName, joined: Date })
+    },
+
+    removePlayerAI() {
+      this.$store.dispatch('deleteServerPlayer')
     },
 
     async initiate() {
@@ -216,11 +223,8 @@ export default Vue.extend({
       if (!this.playerAI || this.playerPlans === undefined) {
         return
       }
-
       // @ts-ignore
-      this.$refs.timer.pause();
-      // @ts-ignore
-      const endTime = formattedTime(this.$refs.timer.timePassed)
+      const endTime = this.$refs.timer.formattedTime
       const { threats, name } = this.quantumServer
 
       const players: Player[] = (this.quantumServer.players || []).concat();

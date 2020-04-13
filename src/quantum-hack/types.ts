@@ -1,3 +1,8 @@
+type FirebaseTime = {
+  seconds: number;
+  nanoseconds: number
+}
+
 export type ThreatStep = {
   report(tick: number, threat: Threat): string
   time: number;
@@ -42,7 +47,8 @@ export type NewPlayer = {
 
 export type Player = NewPlayer & {
   id: string,
-  completeTime?: { seconds: number, nanoseconds: number }
+  joined: FirebaseTime,
+  completeTime?: FirebaseTime,
 }
 
 export type QuantumServer = {
@@ -50,7 +56,7 @@ export type QuantumServer = {
   name: string,
   duration: string,
   hostId: string,
-  startTime?: { seconds: number },
+  startTime?: FirebaseTime,
   players?: Player[],
   welcome_message: string,
   scan_result: string,
