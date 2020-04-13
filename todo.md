@@ -1,5 +1,3 @@
-- Mark password / e-mail as OC info
-- Add a message for the host on how to share a hack
 - Seems to be an additional tick
 - Ensure timeouts only get triggered from the host
 - Put a line between the textareas
@@ -9,6 +7,7 @@
 - Loading a completed hack shows the time it took to complete, should show the time remaining
 - Allow someone to remove themselves as AI
 - Add the host as an AI on creation
+- Give the input bar a background color, possibly a bottom border
 
 -- Go to public Alpha
 

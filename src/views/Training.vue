@@ -28,9 +28,15 @@
         <Timer v-else :duration="quantumServer.endTime"  />
       </div>
 
-      <div  v-if="!startTime" class="flex-grow-1 d-flex justify-space-around align-center">
+      <div  v-if="!startTime" class="flex-grow-1 d-flex flex-column justify-center align-center">
         <v-btn @click="addPlayerAI" v-if="!playerAI">Join as an AI</v-btn>
-        <v-btn @click="initiate" v-else-if="playerAI.isHost">~Initiate scan</v-btn>
+        <template v-else-if="playerAI.isHost">
+          <p>Others can join by going to the same URL:</p>
+          <p>
+            <TextCopy :text="currentURL" />
+          </p>
+          <v-btn @click="initiate">~Initiate scan</v-btn>
+        </template>
         <p v-else>Waiting for the host to initiate server scan</p>
       </div>
       <div  v-else class="flex-grow-1 d-flex">
@@ -63,6 +69,7 @@ import { parseCommands } from '@/quantum-hack/commands'
 import { generate } from '@/quantum-hack/report'
 import { QuantumServer, Player, Command } from '@/quantum-hack/types'
 import Timer from '@/components/Timer.vue'
+import TextCopy from '@/components/TextCopy.vue'
 import { formattedTime } from '@/utils/formatTime'
 
 const planDefaults: string[] = [
@@ -79,7 +86,7 @@ type Tab = {
 
 export default Vue.extend({
   name: 'Training',
-  components: { Timer },
+  components: { Timer, TextCopy },
   data() {
     return {
       initiated: false,
@@ -118,6 +125,10 @@ export default Vue.extend({
         { name: `Threats (${this.threats.length})`, content: threatText, disabled: !initiated },
         { name: 'Report', content: report || '', disabled: !hasReport },
       ]
+    },
+
+    currentURL(): string {
+      return window.location.href
     },
 
     activePlayerTabs(): Player[] {
@@ -323,5 +334,11 @@ export default Vue.extend({
   }
   .toolbar {
     min-height: 36px;
+  }
+  .urlInput {
+    width: 300px;
+    border: solid 1px #a00000;
+    padding: 4px;
+    margin-right: 4px;
   }
 </style>
