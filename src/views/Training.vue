@@ -14,7 +14,7 @@
             :class="playerTabsActive[index] && 'primary--text active'"
             :aria-pressed="playerTabsActive[index] ? 'true' : 'false'"
             v-ripple="{ class: playerTabsActive[index] && 'primary--text' }"
-            v-text="(player.isHost ? `[host] ` : '') + player.displayName"
+            v-text="(isHost ? `[host] ` : '') + player.displayName"
             @click="togglePlayerTab(index)"
           />
         </div>
@@ -29,14 +29,14 @@
       </div>
 
       <div  v-if="!startTime" class="flex-grow-1 d-flex flex-column justify-center align-center">
-        <v-btn @click="addPlayerAI" v-if="!playerAI">Join as an AI</v-btn>
-        <template v-else-if="playerAI.isHost">
+        <template v-if="isHost">
           <p>Others can join by going to the same URL:</p>
           <p>
             <TextCopy :text="currentURL" />
           </p>
-          <v-btn @click="initiate">~initiate server scan</v-btn>
         </template>
+        <v-btn @click="addPlayerAI" v-if="!playerAI">Join as an AI</v-btn>
+        <v-btn  v-else-if="isHost" @click="initiate">~initiate server scan</v-btn>
         <p v-else>Waiting for the host to initiate server scan</p>
       </div>
       <div  v-else class="flex-grow-1 d-flex">
@@ -129,6 +129,10 @@ export default Vue.extend({
 
     currentURL(): string {
       return window.location.href
+    },
+
+    isHost(): boolean {
+      return this.quantumServer.hostId === this.$store.state.user.uid
     },
 
     activePlayerTabs(): Player[] {
@@ -265,6 +269,7 @@ export default Vue.extend({
   .section-container {
     --input-height: 50vh;
     --border-size: 2px;
+    --border-color: #555;
 
     height: calc(100vh - 64px);
     display: flex;
@@ -275,7 +280,7 @@ export default Vue.extend({
       &.input {
         flex-direction: column;
         height: var(--input-height);
-        border-bottom: solid #555 var(--border-size);
+        border-bottom: solid var(--border-color) var(--border-size);
       }
       &.output {
         flex-direction: row;
@@ -298,6 +303,9 @@ export default Vue.extend({
     flex: 1;
     font-size: 14px;
     position: relative;
+    &:nth-child(n+2) {
+      border-left: solid var(--border-color) var(--border-size);
+    }
     > pre {
       white-space: pre-line;
       padding: 12px;
@@ -310,9 +318,6 @@ export default Vue.extend({
       resize: none;
       width: 100%;
       height: 100%;
-      &:nth-child(n+2) {
-        border-left: solid #555 var(--border-size);
-      }
       &:focus {
         background-color: rgba(255,255,255,0.04)
       }
@@ -334,6 +339,8 @@ export default Vue.extend({
   }
   .toolbar {
     min-height: 36px;
+    background: rgba(255,255,255,0.07);
+    box-shadow: inset var(--border-color) 0 -1px 0;
   }
   .urlInput {
     width: 300px;
