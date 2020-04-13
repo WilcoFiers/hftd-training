@@ -251,6 +251,19 @@ export default Vue.extend({
   },
 
   watch: {
+    quantumServer: {
+      immediate: true,
+      handler(newVal, oldVal = { threats: [] }) {
+        if (newVal.report && !oldVal.report) {
+          this.serverTab = 3; // Select Report tab
+        } else if (newVal.threats.length > oldVal.threats.length) {
+          this.serverTab = 2; // Select Threats tab
+        } else if (newVal.startTime && !oldVal.startTime) {
+          this.serverTab = 1; // Select Scan tab
+        }
+      }
+    },
+
     playerAI: {
       immediate: true,
       handler(newVal, oldVal) {
