@@ -1,17 +1,27 @@
-- Seems to be an additional tick
-- After complete, timer goes to 0:00
-- Loading a completed hack shows the time it took to complete, should show the time remaining
-- Rename "Training" and "TrainingList"
-- In AI tabs, don't allow disabling all tabs.
-- In output, Automatically navigate to the last available tab
-- Take components out of Training
-- Clock doesn't stop if a player isn't the last one to click "stop"
+- Mark password / e-mail as OC info
 - Add a message for the host on how to share a hack
-- Do I still need isHost?
-- Add the host as an AI on creation
-- Allow someone to remove themselves as AI
-- Add a tab showing spectators
-- Put a line between the textareas
-- Improve scrollbar colors in Firefox
-- Select servers from the actual server list
+- Seems to be an additional tick
 - Ensure timeouts only get triggered from the host
+- Put a line between the textareas
+- In output, Automatically navigate to the last available tab
+- After complete, timer goes to 0:00
+- Clock doesn't stop if a player isn't the last one to click "stop"
+- Loading a completed hack shows the time it took to complete, should show the time remaining
+- Allow someone to remove themselves as AI
+- Add the host as an AI on creation
+
+-- Go to public Alpha
+
+- Select servers from the actual server list
+- Limit the number of AIs in server config
+- Spacing in the plans is off
+- Rename "Training" and "TrainingList"
+- Take components out of Training
+- Do I still need isHost?
+- Add more servers, including multi-AI, have them cost credits
+- Improve scrollbar colors in Firefox
+- Allow people to see hacks they've done
+- Add a tab showing spectators
+
+-- Go to public beta
+

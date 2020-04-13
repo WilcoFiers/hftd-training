@@ -31,12 +31,13 @@
                     :rules="[required]"
                   />
                   <v-text-field
-                    label="E-mail"
+                    label="E-mail (Out of Character)"
                     v-model="email"
                     prepend-icon="mdi-at"
                     type="text"
                     autocomplete="email"
                     :rules="[required, validEmail]"
+                    persistent-hint
                   />
                   <ErrorMessage :message="profileMessage" />
                   <v-btn type="submit" class="secondary">Update profile</v-btn>
@@ -50,8 +51,8 @@
           <v-col>
             <v-form @submit.prevent="updatePassword" ref="passwordForm">
               <v-card>
-                <v-card-title class="pb-0">
-                  <h2>Update password</h2>
+                <v-card-title class="pb-0 b-flex justify-space-between">
+                  <h2>Update password</h2> <small>(Out of Character)</small>
                 </v-card-title>
                 <v-card-text>
                   <v-text-field

@@ -9,7 +9,7 @@
           </v-row>
           <v-row>
             <v-text-field
-              label="E-mail"
+              label="E-mail (Out of Character)"
               v-model="email"
               :rules="[required, validEmail]"
             />
