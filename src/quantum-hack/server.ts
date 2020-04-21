@@ -1,10 +1,13 @@
 import { QuantumServer } from './types'
-import quantumServers from './training-servers'
+import quantumServers, { emptyServer } from './servers'
+
+const serverList: QuantumServer[] = []
+quantumServers.forEach((serverGroup) => serverList.push(...serverGroup.servers))
 
 export const getServer = (serverName?: string): QuantumServer => {
-  let qserver = quantumServers.find(qserver => qserver.name === serverName)
+  let qserver = serverList.find(qserver => qserver.name === serverName)
   if (!qserver) {
-    qserver = quantumServers[0]
+    qserver = emptyServer
   }
 
   return {
@@ -15,8 +18,8 @@ export const getServer = (serverName?: string): QuantumServer => {
     scan_result: qserver.scan_result || '',
     finished_success: qserver.finished_success || '',
     finished_timeout: qserver.finished_timeout || '',
-    threats: [],
-    ports: []
+    threats: qserver.threats || [],
+    ports: qserver.ports || []
   }
 }
 

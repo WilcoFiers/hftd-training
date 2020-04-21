@@ -12,6 +12,7 @@ export type ThreatStep = {
 
 export type Threat = {
   name: string;
+  description: string;
   start: number;
   report: string;
   health: number;

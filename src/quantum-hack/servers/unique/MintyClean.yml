@@ -1,0 +1,59 @@
+name: "MintyClean"
+duration: "11:00"
+welcome_message: |
+  MintyClean is a unique server architecture, with 6 ports and 2 trace routes.
+
+scan_result: |
+  Port 1: (0/4 QPU):
+  > Connect to port 2
+  > Redirect up to 2 QPU from Port 1 to Port 2
+  > Redirect up to 2 QPU from Port 1 to Port 4
+  > Link 4 QPU to Port 4 <maximum of one time per hack>
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 2 (2/4 QPU):
+  > Connect to port 3
+  > Connect to port 4
+  > Brute force security system 1 5 damage, costs 1 qpu linked to port 2
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 3: 
+  > Initial connect
+  > Connect to port 1
+  > Connect to port 5
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 4 (2/4 QPU):
+  > Connect to port 3
+  > Brute force security system 1, 3 and 2, 3 damage, costs 1 qpu linked to port 4
+  > Add 2 nodes to Trace Route 1, costs 1 QPU linked to Port 4
+  > Add 2 nodes to Trace Route 2, costs 1 QPU linked to Port 4
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 5 (0/4QPU):
+  > Connect to Port 6
+  > Redirect up to 2 QPU from Port 1 to Port 4
+  > Redirect up to 2 QPU from Port 1 to Port 6
+  > Link 4 QPU to Port 4 <maximum of one time per hack>
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 6 (2/4 QPU):
+  > Connect to Port 3
+  > Connect to Port 4
+  > Brute force security system 1, 5 damage, costs 1 qpu linked to port 2
+  > Download data
+  > Upload data
+  > Edit data
+
+  Nodes in Trace Route 1 at the start: 6/12
+  Nodes in Trace Route 2 at the start: 6/12

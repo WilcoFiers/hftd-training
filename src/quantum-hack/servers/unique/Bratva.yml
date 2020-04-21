@@ -1,0 +1,116 @@
+name: "Solntsevskaya Bratva"
+duration: "11:00"
+welcome_message: |
+  The Solntsevskaya Bratva server uses a Russion server architecture, with 5 ports and 3 trace routes.
+
+scan_result: |
+  Port 1 (0/4 QPU):
+  > Connect to port 5
+  > Connect to port 2 <can only connect one user per tick>
+  > Brute force Security System 1, 4 damage, costs 1 QPU linked to Port 1
+  > Brute force Security System 1, 2 and 3, 2 damage, costs 1 QPU linked to Port 1
+  > Add 2 nodes to Trace Route 1, costs 1 QPU linked to Port 1 per node added
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 2 (2/4 QPU):
+  > Connect to port 1
+  > Connect to port 3 <can only connect one user per tick>
+  > Brute force security system 1, 2 damage, cost no QPU
+  > Link 4 QPU to Port 2 <maximum of one time per hack>
+  > Redirect up to 2 QPU from Port 2 to Port 1
+  > Redirect up to 2 QPU from Port 2 to Port 3
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 3 (0/4 QPU):
+  Initial connect
+  > Connect to port 2
+  > Connect to port 4 <can only connect one user per tick>
+  > Brute force security system 2, 5 damage, costs 1 QPU linked to Port 3
+  > Brute force Security System 1, 2 and 3, 2 damage, costs 1 QPU linked to Port 3
+  > Add 2 nodes to Trace Route 2, costs 1 QPU linked to Port 3 per node added
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 4 (2/4 QPU):
+  > Connect to port 3
+  > Connect to port 5 <can only connect one user per tick>
+  > Brute force security system 3, 2 damage, cost no QPU
+  > Link 4 QPU to Port 4 <maximum of one time per hack>
+  > Redirect up to 2 QPU from Port 4 to Port 3
+  > Redirect up to 2 QPU from Port 4 to Port 5
+  > Download data
+  > Upload data
+  > Edit data
+
+  Port 5 (0/4 QPU):
+  > Connect to Port 4
+  > Connect to Port 1 <can only connect one user per tick>
+  > Brute force security system 3, 4 damage, costs 1 QPU linked to Port 5
+  > Brute force Security System 1, 2 and 3, 2 damage, costs 1 QPU linked to Port 5
+  > Add 2 nodes to Trace Route 3, costs 1 QPU linked to Port 5 per node added
+  > Download data
+  > Upload data
+  > Edit data
+
+  Nodes in Trace Route 1 at the start: 6/9
+  Nodes in Trace Route 2 at the start: 6/9
+  Nodes in Trace Route 3 at the start: 6/9
+
+threats:
+  - 
+    name: "Standard Tracing and Kicker Program"
+    description: |
+      At the start of T02, Security System 3 starts tracing you.
+      It needs 4 damage to be brute forced. It ignores the first 2 damage per tick.
+      If attacks from this program reduce nodes in a trace route to 4 or less nodes, all QAIs at port 4 are immediately disconnected.
+
+      - At the end of T03 trace route 3 will lose 1 node(s).
+      - At the end of T04 trace route 3 will lose 2 node(s).
+      - At the end of T05 trace route 3 will lose 3 node(s).
+  - 
+    name: "Advanced All-Route Tracing Program"
+    description: |
+      At the start of T03, Security System 2 starts tracing you.
+      It needs 4 damage to be brute forced. It ignores the first 2 damage per tick.
+
+      - At the end of T04 all trace routes will lose 2 node(s).
+      - At the end of T06 all trace routes will lose 2 node(s).
+      - At the end of T08 all trace routes will lose 3 node(s).
+  - 
+    name: "Backup Security Log"
+    description: |
+      At the start of T04, Port 1 creates a security log. Edit its data 1 times to remove your activities.
+
+      - At the end of T05 another security log is created on Port 5. Edit its data once to edit all your activities out.
+      - At the end of T09 all trace routes will lose 4 node(s), even if all QAIs are disconnected.
+  - 
+    name: "Regular Security Log"
+    description: |
+      At the start of T02, Port 4 creates a security log. Edit its data 3 times to remove your activities.
+
+      - At the end of T07 all trace routes will lose 3 node(s), even if all QAIs are disconnected.
+  - 
+    name: "Target Found"
+    description: |
+      At the start of T05, "???????? ????" file can be downloaded from port 5.
+      Download 1 time to download all. Several QAIs can download simultaneously.
+  - 
+    name: "Target Found"
+    description: |
+      At the start of T02, "?????? ???????????? ???" file can be downloaded from port 3.
+      Download 3 times to download all. Several QAIs can download simultaneously.
+  - 
+    name: "Target Found"
+    description: |
+      At the start of T04, "stored-message-2030-01-22.txt" file can be downloaded from port 2.
+      Download 2 times to download all. Several QAIs can download simultaneously.
+  - 
+    name: "Target Found"
+    description: |
+      At the start of T01, "stored-message-2030-04-11.txt" file can be downloaded from port 4.
+      Download 2 times to download all. Several QAIs can download simultaneously.

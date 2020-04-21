@@ -1,15 +1,15 @@
 <template>
   <v-container>
-    <v-row v-for="(training, index) in trainings" :key="index+'-training'">
+    <v-row v-for="(serverGroup, index) in serverGroups" :key="index+'-server'">
       <v-col cols="12" sm="9" md="8">
         <v-card>
           <v-card-title class="d-flex">
-            <h2>{{ training.name }}</h2>
+            <h2>{{ serverGroup.name }}</h2>
             <v-spacer />
-            <v-icon left>mdi-battery-charging-10</v-icon>
+            <v-icon left>mdi-battery-charging-{{ index * 40 + 10}}</v-icon>
           </v-card-title>
           <v-list>
-            <v-list-item v-for="(server, index) in training.servers" :key="index"
+            <v-list-item v-for="(server, index) in serverGroup.servers" :key="index"
             @click="newServerModal(server.name)">
               <v-list-item-icon>
                 <v-icon v-if="server.locked">mdi-lock</v-icon>
@@ -36,6 +36,7 @@
 import Vue from 'vue'
 import ServerSetupForm from '@/components/ServerSetupForm.vue'
 import { QuantumServer } from '@/quantum-hack/types'
+import serverGroups from '@/quantum-hack/servers'
 
 export default Vue.extend({
   name: 'TrainingList',
@@ -44,21 +45,7 @@ export default Vue.extend({
     return {
       serverSetupDialog: false as boolean,
       serverName: '' as string,
-      trainings: [
-        {
-          name: 'Beginner Servers',
-          servers: [{
-              name: 'Training Server #1',
-              // complete: true
-            }, {
-              name: 'Training Server #2',
-            }, {
-              name: 'Training Server #3',
-              // locked: true
-            }
-          ]
-        }
-      ]
+      serverGroups
     }
   },
 

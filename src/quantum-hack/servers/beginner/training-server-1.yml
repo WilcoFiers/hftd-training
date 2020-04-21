@@ -1,0 +1,33 @@
+name: "Training Server #1"
+duration: "10:00"
+welcome_message: |
+  Welcome, to the testing program.
+
+  This simulation is designed as a training ground for hackers new to Quantum Hacking. You don’t have to worry about negative consequences as HFTD runs this testing server, you and your AI will be safe.  Your first command will always be to initiate server scan, using the command `~initiate server scan`
+
+scan_result: |
+  After the scan, your AI will provide you with the information about the server, and further actions that can be taken. As you command the AI to scan, a 10 minute timer starts. You need to complete your data gathering and planning before it runs out, or your AI will self-destruct to prevent the hack being traced to you. Let’s look at the scan results.
+
+  Scan information
+  = Ports: (1)
+  = Connected to: Port 1
+  Actions
+  > Download data from Port 1
+  > Disconnect
+
+  As you can see you are connected to port 1, you will always be able to connect to just 1 port at the start of a hack. This is your initial port (i-port). Usually you have multiple options to connect to ports, but for this program we stick to port 1. Your objective here is to download some data and then get out. Commands should be led by a tick, you’ll have T00 until T10 (11 actions) for your AI to do. The plan for this mission looks as follows:
+
+  T00: connect
+  T01: download data from port 1
+  T02: disconnect
+
+  The command on Tick 00 is always to connect. Normally your plan would be longer, but for this mission, we can do with just these few commands. Begin writing your plan with the command `~begin plan`. Each message you send after that becomes part of the plan. Finish your plan with the command `~end plan`.
+
+planning_done: |
+  Good job! You wrote your very first plan! As long as the timer hasn’t run out, you can always change it. You can view your current plan with the command `~plan`. When you run your plan the AI will get to work, this also prevents the hack being traced to you. Let’s leave them to it, run your plan now, using the command `~run`.
+
+finished_success: |
+  Congratulations, you just completed your very first hack, well, kind of. Your AI is executing it as we speak. After the AI is done, it will analyse the hack and generate an After Action Report and send you anything it might have recovered during the hack. Usually this takes about 30 minutes, but for this mission we can generate it much quicker. Here it is!
+
+finished_timeout: |
+  Oops! You ran out of time. When this happens, your AI will run the last plan you submitted. Depending on the contents of that plan, things may still work out, but it is likely to fail.

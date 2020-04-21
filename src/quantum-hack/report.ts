@@ -28,14 +28,15 @@ export function generate(server_name = 'unknown', plans: Plans, threats: Threat[
   }
 
   const threat_action_ticks: ThreatTick[] = []
-  for (const threat of threats) {
-    for (const [tick, step] of threat.steps.entries()) {
-      if (!threat_action_ticks[tick]) {
-        threat_action_ticks[tick] = []
-      }
-      threat_action_ticks[tick].push({ threat, step })
-    }
-  }
+  // TODO: Fix this
+  // for (const threat of threats) {
+  //   for (const [tick, step] of threat.steps.entries()) {
+  //     if (!threat_action_ticks[tick]) {
+  //       threat_action_ticks[tick] = []
+  //     }
+  //     threat_action_ticks[tick].push({ threat, step })
+  //   }
+  // }
 
   const plan_length = Math.max(
     threat_action_ticks.length, 

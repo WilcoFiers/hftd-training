@@ -35,14 +35,14 @@
           <p>
             <TextCopy :text="currentURL" />
           </p>
-          <v-btn @click="initiate">~initiate server scan</v-btn>
+          <v-btn @click="initiate" :disabled="!quantumServer.players || !this.quantumServer.players.length ">~initiate server scan</v-btn>
         </template>
         <template v-else>
           <p>Waiting for the host to initiate server scan</p>
           <v-btn @click="removePlayerAI">Remove my AI</v-btn>
         </template>
       </div>
-      <div  v-else class="flex-grow-1 d-flex">
+      <div v-else class="flex-grow-1 d-flex">
         <div v-for="(player, index) in activePlayerTabs" :key="index" class="content">
           <textarea 
             v-if="player === playerAI"
@@ -56,9 +56,17 @@
     </section>
 
     <section class="output">
-      <v-tabs v-model="serverTab" vertical>
-        <v-tab v-for="server in serverTabs" :key="server.name" v-text="server.name" :disabled="server.disabled" />
-      </v-tabs>
+      <div class="d-flex flex-column">
+        <v-btn v-for="(server, index) in serverTabs" 
+          :key="server.name" 
+          v-text="server.name" 
+          :disabled="server.disabled"
+          :class="serverTab === index && 'primary--text active-vertical'"
+          @click="serverTab = index" />
+      </div>
+      <!-- <v-tabs v-model="serverTab" vertical>
+        <v-tab v-for="(server, index) in serverTabs" :key="server.name" v-text="server.name" :disabled="server.disabled" :value="index" />
+      </v-tabs> -->
       <div class="content overflow-auto">
         <pre v-text="serverTabs[serverTab].content" />
       </div>
@@ -70,7 +78,7 @@
 import Vue from 'vue'
 import { parseCommands } from '@/quantum-hack/commands'
 import { generate } from '@/quantum-hack/report'
-import { QuantumServer, Player, Command } from '@/quantum-hack/types'
+import { QuantumServer, Player, Command, Threat } from '@/quantum-hack/types'
 import Timer from '@/components/Timer.vue'
 import TextCopy from '@/components/TextCopy.vue'
 import { formattedTime } from '@/utils/formatTime'
@@ -112,11 +120,25 @@ export default Vue.extend({
       return 0
     },
 
+    activeThreats(): Threat[] {
+      if (!this.startTime) {
+        return []
+      }
+      return this.quantumServer.threats
+    },
+
     serverTabs(): Tab[] {
-      const { welcome_message, scan_result, report, threats } = this.quantumServer
+      const { welcome_message, scan_result, report } = this.quantumServer
       const initiated = !!this.startTime
       const hasReport = !!report
-      const threatText = 'There are currently no threats.'
+      let threatText = 'There are currently no threats.'
+
+      const threats = this.activeThreats
+      if (threats.length) {
+        threatText = threats.map(({ name, description }) => {
+          return `### Threat Detected: ${name} ###\n${description}`
+        }).join('\n\n')
+      }
 
       return [
         { name: 'Ping', content: welcome_message },
@@ -260,7 +282,7 @@ export default Vue.extend({
       handler(newVal, oldVal = { threats: [] }) {
         if (newVal.report && !oldVal.report) {
           this.serverTab = 3; // Select Report tab
-        } else if (newVal.threats.length > oldVal.threats.length) {
+        } else if (newVal.startTime && newVal.threats.length > oldVal.threats.length) {
           this.serverTab = 2; // Select Threats tab
         } else if (newVal.startTime && !oldVal.startTime) {
           this.serverTab = 1; // Select Scan tab
@@ -355,6 +377,9 @@ export default Vue.extend({
   .active {
     border-bottom: 2px solid red;
   }
+  .active-vertical {
+    border-left: 2px solid red;
+  }
   .toolbar {
     min-height: 36px;
     background: rgba(255,255,255,0.07);
@@ -365,5 +390,9 @@ export default Vue.extend({
     border: solid 1px #a00000;
     padding: 4px;
     margin-right: 4px;
+  }
+  .v-btn {
+    border-radius: 0;
+    min-height: 36px;
   }
 </style>
