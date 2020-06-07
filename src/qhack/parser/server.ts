@@ -8,7 +8,7 @@ const serverDefaults = {
 
 function serverParser (server: Server): ActiveServer {
   const ports = getActivePorts(server)
-  const [initial_port = '1'] = Object.entries(ports).find(([_, port]) => {
+  const [initial_port = '1'] = Object.entries(ports).find(([, port]) => {
     port.actions.some(({ type }) => type === 'initial connect')
   }) || []
 

@@ -1,5 +1,7 @@
+// @ts-ignore // TDDO: define this type
+import partialCompare from 'partial-compare'
 import { ActivePlayerAI, PlayerAction, ActiveServer, PortAction } from "@/qhack/types";
-const partialCompare = require('partial-compare');
+
 
 function findAllowedPortAction (
   playerAction: PlayerAction,

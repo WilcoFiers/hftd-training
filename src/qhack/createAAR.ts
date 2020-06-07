@@ -1,7 +1,7 @@
 import { TickLog } from './types';
 
 export default function createAAR(tickLogs: TickLog[]): string {
-  let ticks: string[] = []
+  const ticks: string[] = []
   const reveseLogs = tickLogs.concat().reverse()
 
   // Start at the end:
@@ -15,11 +15,6 @@ export default function createAAR(tickLogs: TickLog[]): string {
       return;
     }
     const tickNum = reveseLogs.length - index - 1
-
-    let newThreats = 'No new active threats.'
-    if (tickLog.newThreats.length > 0) {
-      newThreats = tickLog.newThreats.join('\n\n')
-    }
 
     let tick = `/// ----------------------- TICK ${ tickNum } INI ----------------------- \\\\\\\n`
     if (tickLog.newThreats.length > 0) {

@@ -7,7 +7,7 @@ export function getPortMap (description: string): PortMap {
   let currentPort: string | undefined
   
   lines.forEach(line => {
-    let [portId, port] = parsePort(line)
+    const [portId, port] = parsePort(line)
     if (port && portId) {
       portMap[portId] = port
       currentPort = portId
@@ -21,7 +21,7 @@ export function getPortMap (description: string): PortMap {
       return;
     }
 
-    let action = portActionParser(actionLine)
+    const action = portActionParser(actionLine)
     if (currentPort && action) {
       portMap[currentPort].actions.push(action)
     }
@@ -37,7 +37,7 @@ export function parsePort(portString: string): [string, Port] | [] {
     return [] // not a port
   }
   const { portId } = portMatch
-  let port: Port = { actions: [] }
+  const port: Port = { actions: [] }
 
   // ... 0 / 1 QPUs ... OR: 1 QPU
   const qpuRegex = /(?<qpu_start>[0-9]+)(\s?(\/|of)\s?(?<qpu_max>[0-9]+))?\s?QPUs?/gi

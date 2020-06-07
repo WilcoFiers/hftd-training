@@ -69,7 +69,8 @@
       "prettier/prettier": "off",
       "@typescript-eslint/ban-ts-ignore": "off",
       "@typescript-eslint/camelcase": "off",
-      "no-useless-escape": "off"
+      "no-useless-escape": "off",
+      "@typescript-eslint/no-use-before-define": "off"
     }
   },
   "browserslist": [

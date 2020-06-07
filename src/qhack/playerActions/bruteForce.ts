@@ -79,7 +79,7 @@ export const runner: TickSubstep = ({ action, playerAI, server }) => {
 
   Object.entries(server.activeSecurity)
   .forEach(([index, [threat]]) => {
-    let num = parseInt(index)
+    const num = parseInt(index)
     if (threat && [num, 'all'].includes(portAction.securitySystem)) {
       threat.tickDamage = portAction.damage + (threat.tickDamage || 0)
     }
