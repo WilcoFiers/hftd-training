@@ -68,6 +68,7 @@ export const user: UserModules = {
       if (user) {
         commit("setUserProps", user);
       }
+      await dispatch("bindHackList");
       await dispatch("bindUserData");
       commit("signedIn", true);
     },

@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { vuexfireMutations } from "vuexfire";
 import { RootState } from "./types";
 import { user, UserState } from './user'
-import { vuexfireMutations } from "vuexfire";
+import { hacks, HacksState } from './hacks'
 import { quantumServer } from './quantumServers'
 import router from "@/router";
 
@@ -14,13 +15,14 @@ const defaultState: RootState = {
 
 export interface State extends RootState {
   user: UserState;
+  hacks: HacksState;
 }
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store<RootState>({
   state: defaultState,
-  modules: { user, quantumServer },
+  modules: { user, hacks, quantumServer },
 
   mutations: {
     ...vuexfireMutations,

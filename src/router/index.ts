@@ -4,10 +4,14 @@ import AuthGuard from './AuthGuard'
 import Home from "@/views/Home.vue";
 import TrainingList from "@/views/TrainingList.vue";
 import Training from "@/views/Training.vue";
+import MyHacks from "@/views/MyHacks.vue";
+import CreateAAR from "@/views/CreateAAR.vue";
+import Hack from "@/views/Hack.vue";
 import Credit from "@/views/Credit.vue";
-// import ComingSoon from "@/views/ComingSoon.vue";
+
 
 import { userRoutes } from './user'
+import { adminRoutes } from './admin'
 
 Vue.use(VueRouter);
 
@@ -30,6 +34,24 @@ const routes = [
     beforeEnter: AuthGuard
   },
   {
+    path: "/hacks",
+    name: "MyHacks",
+    component: MyHacks,
+    beforeEnter: AuthGuard
+  },
+  {
+    path: "/create-aar",
+    name: "CreateAAR",
+    component: CreateAAR,
+    beforeEnter: AuthGuard
+  },
+  {
+    path: "/hacks/:hackId",
+    name: "Hack",
+    component: Hack,
+    beforeEnter: AuthGuard
+  },
+  {
     path: "/credit",
     name: "Credit",
     component: Credit,
@@ -45,6 +67,7 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   ...userRoutes,
+  ...adminRoutes,
 ];
 
 const router = new VueRouter({

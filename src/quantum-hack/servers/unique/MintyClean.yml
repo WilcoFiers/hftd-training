@@ -8,7 +8,7 @@ scan_result: |
   > Connect to port 2
   > Redirect up to 2 QPU from Port 1 to Port 2
   > Redirect up to 2 QPU from Port 1 to Port 4
-  > Link 4 QPU to Port 4 <maximum of one time per hack>
+  > Link 4 QPU to Port 1 <maximum of one time per hack>
   > Download data
   > Upload data
   > Edit data
@@ -16,7 +16,7 @@ scan_result: |
   Port 2 (2/4 QPU):
   > Connect to port 3
   > Connect to port 4
-  > Brute force security system 1 5 damage, costs 1 qpu linked to port 2
+  > Brute force security system 1, 5 damage, costs 1 qpu linked to port 2
   > Download data
   > Upload data
   > Edit data
@@ -39,18 +39,18 @@ scan_result: |
   > Edit data
 
   Port 5 (0/4QPU):
-  > Connect to Port 6
+  > Connect to port 6
   > Redirect up to 2 QPU from Port 1 to Port 4
   > Redirect up to 2 QPU from Port 1 to Port 6
-  > Link 4 QPU to Port 4 <maximum of one time per hack>
+  > Link 4 QPU to Port 5 <maximum of one time per hack>
   > Download data
   > Upload data
   > Edit data
 
   Port 6 (2/4 QPU):
-  > Connect to Port 3
-  > Connect to Port 4
-  > Brute force security system 1, 5 damage, costs 1 qpu linked to port 2
+  > Connect to port 3
+  > Connect to port 4
+  > Brute force security system 2, 5 damage, costs 1 qpu linked to port 2
   > Download data
   > Upload data
   > Edit data

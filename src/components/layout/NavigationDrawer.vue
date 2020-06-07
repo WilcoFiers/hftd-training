@@ -33,10 +33,20 @@ const navItems: NavItem[] = [
     icon: "server-network"
   },
   {
-    text: "Credit",
-    to: "/credit",
-    icon: "currency-btc"
+    text: "Create AAR",
+    to: "/create-aar",
+    icon: "file-plus"
   },
+  {
+    text: "My Hacks",
+    to: "/hacks",
+    icon: "text-box-multiple"
+  },
+  // {
+  //   text: "Credit",
+  //   to: "/credit",
+  //   icon: "currency-btc"
+  // },
   {
     text: "Settings",
     to: "/settings",

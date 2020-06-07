@@ -56,7 +56,7 @@
     </section>
 
     <section class="output">
-      <div class="d-flex flex-column">
+      <div class="d-flex flex-column output-tabs">
         <v-btn v-for="(server, index) in serverTabs" 
           :key="server.name" 
           v-text="server.name" 
@@ -393,6 +393,8 @@ export default Vue.extend({
   }
   .v-btn {
     border-radius: 0;
-    min-height: 36px;
+  }
+  .output-tabs .v-btn {
+    min-height: 45px;
   }
 </style>

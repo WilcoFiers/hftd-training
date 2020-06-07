@@ -4,8 +4,6 @@ import Bratva from './Bratva.yml';
 import MintyClean from './MintyClean.yml';
 import { QuantumServer } from '../../types'
 
-console.log(Bratva)
-
 export default {
   name: 'Unique Servers',
   servers: [Bratva, MintyClean] as QuantumServer[]

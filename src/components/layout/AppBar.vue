@@ -7,7 +7,7 @@
 
     <router-link to="/" class="title ml-2 unstyled">
       <v-icon left large>mdi-bacteria-outline</v-icon>HTFD&nbsp;
-      <span class="font-weight-light">Server Training</span>
+      <span class="font-weight-light">Server Interface</span>
     </router-link>
   </v-app-bar>
 </template>

@@ -24,6 +24,20 @@ service cloud.firestore {
       }
     }
 
+    match /hacks/{document} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /serverLayouts/{document} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /threats/{document} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
     function isAdmin() {
       return getRole('admin')
     }

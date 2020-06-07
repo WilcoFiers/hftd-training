@@ -1,4 +1,11 @@
 - Add support for basic threats
+- Allow initial connect to multiple ports
+- Fix DR bug
+-     > Delete data (Can be used to delete target data, or sysadmin AI's)
+-     > Brute force the oldest active program, 3 damage, costs no QPU, 1 tick delay <Maximum of 2 times per hack>
+-     > Add 2 nodes to Trace Route 3, costs 1 QPU linked to port 5, 1 tick delay
+
+
 
 -- Go to public Alpha
 
