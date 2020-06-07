@@ -46,8 +46,8 @@ export default Vue.extend({
   },
 
   computed: {
-    threats(): Threat[] {
-      return this.$store.state.hacks.threats as Threat[]
+    threats(): (Threat & { id: string })[] {
+      return this.$store.state.hacks.threats as (Threat & { id: string })[]
     }
   },
 
@@ -73,8 +73,7 @@ export default Vue.extend({
         })
       } else {
         this.$store.dispatch('updateThreat', {
-          // @ts-ignore
-          id: this.serverLayouts[this.current-1].id,
+          id: this.threats[this.current-1].id,
           name: this.name,
           description: this.description,
           plans: this.plans
