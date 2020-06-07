@@ -12,6 +12,7 @@ function threatParser (threat: Threat): ActiveThreat {
   const health = getThreatHealth(threat)
   if (health) {
     activeThreat.health = health
+    activeThreat.healthMax = health
   }
   
   const damage_reduction = getDamageReduction(threat)
@@ -26,6 +27,7 @@ export default threatParser
 export function getDescription(threat: Threat): string {
   return threat.description
     .replace('{{tick}}', `T0${threat.startTick}`)
+    .replace('{{start}}', `T0${threat.startTick}`)
     .replace('{{sys}}', String(threat.securitySystem))
 }
 

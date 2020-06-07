@@ -1,4 +1,4 @@
-import { PlayerAI, Server, Threat } from '../types'
+import { PlayerAI, Server, Threat } from '../../types'
 
 export const server: Server = {
   name: 'Training server #1',
@@ -32,10 +32,9 @@ export const threats: Threat[] = [{
   description: `At the start of {{tick}}, Security System {{sys}} starts tracing you.
 It needs 4 damage to be brute forced. It ignores the first 1 damage per tick`,
   plans: 
-`> After 1 tick, trace route {{route}} will lose 3 nodes
+`- At the end of T{{start+1}}, trace route {{route}} will lose 3 nodes
 > After 2 ticks trace route {{route}} will lose 3 nodes`
   }]
-
 
 export const playerAIs: PlayerAI[] = [{
     displayName: "Harambe",

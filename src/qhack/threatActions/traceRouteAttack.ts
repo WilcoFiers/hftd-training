@@ -1,19 +1,28 @@
-import { ThreatActionMethod, ThreatAction } from '../types'
+import { ThreatActionMethod } from '../types'
+import getTickDelay from '../utils/getTickDelay'
+import { runAfterDisconnect } from '../utils/runAfterDisconnect'
 
 export const type = 'trace route attack'
 
-export const parser = (line: string): ThreatAction | undefined => {
-  // "after X ticks trace route Y will lose Z nodes"
-  const singleRouteRegex = /after\s(?<tick_delay>[0-9]+)\sticks?,?(\strace)\sroute\s(?<traceRoute>[0-9])\s(will\slose|loses)\s(?<remove_nodes>[0-9]+)\snode/i
-  // "after X ticks all trace routes will lose Y nodes"
-  const allRouteRegex = /after\s(?<tick_delay>[0-9]+)\sticks?,?\s(?<traceRoute>all)(\strace)\sroutes(\swill)?\slose\s(?<remove_nodes>[0-9]+)\snode/i
+export type TraceRouteAttackAction = {
+  type: 'trace route attack'
+  tick_delay: number
+  traceRoute: number | 'all'
+  remove_nodes: number
+}
+
+export const parser = (line: string): TraceRouteAttackAction | undefined => {
+  // "route Y will lose Z nodes"
+  const singleRouteRegex = /route\s(?<traceRoute>[0-9])\s(will\slose|loses)\s(?<remove_nodes>[0-9]+)\snode/i
+  // "all trace routes will lose Y nodes"
+  const allRouteRegex = /(?<traceRoute>all)(\strace)\sroutes(\swill)?\slose\s(?<remove_nodes>[0-9]+)\snode/i
 
   const match = singleRouteRegex.exec(line) || allRouteRegex.exec(line)
   if (!match || !match.groups) {
     return
   }
-  const type = 'trace route attack'
-  const tick_delay = parseInt(match.groups.tick_delay)
+
+  const tick_delay = getTickDelay(line)
   const remove_nodes = parseInt(match.groups.remove_nodes)
   
   let traceRoute: number | 'all' 
@@ -24,7 +33,7 @@ export const parser = (line: string): ThreatAction | undefined => {
   }
 
   // Check all of 'm parsed right
-  if (isNaN(tick_delay) || isNaN(remove_nodes) || (traceRoute !== 'all' && isNaN(traceRoute))) {
+  if (!tick_delay || isNaN(remove_nodes) || (traceRoute !== 'all' && isNaN(traceRoute))) {
     return 
   }
 
@@ -33,7 +42,7 @@ export const parser = (line: string): ThreatAction | undefined => {
 
 export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }) => {
   // Don't run after players have disconnected
-  if (playerAIs.every(({ disconnected}) => disconnected) && !threat.afterDisconnect) {
+  if (action.type !== type || !runAfterDisconnect({ playerAIs, threat })) {
     return {}
   }
 

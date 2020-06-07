@@ -1,3 +1,6 @@
+export { ThreatAction } from './threatActions'
+import { ThreatAction } from './threatActions'
+
 export type BasicActionTypes = 
   'initial connect' | 
   'disconnect' | 
@@ -133,13 +136,6 @@ export interface TraceRoute {
   nodes: number
 }
 
-export type ThreatAction = {
-  type: string
-  tick_delay: number
-  traceRoute?: number | 'all'
-  remove_nodes?: number
-}
-
 export interface Threat {
   name: string,
   description: string,
@@ -154,6 +150,7 @@ export interface ActiveThreat extends Threat {
   actions: ThreatAction[],
   tickDamage: number,
   health?: number,
+  healthMax?: number,
   damage_reduction?: number,
 }
 
