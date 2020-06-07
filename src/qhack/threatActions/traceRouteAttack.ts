@@ -1,6 +1,5 @@
 import { ThreatActionMethod } from '../types'
-import getTickDelay from '../utils/getTickDelay'
-import { runAfterDisconnect } from '../utils/runAfterDisconnect'
+import { runAfterDisconnect, getTickDelay } from '../utils'
 
 export const type = 'trace route attack'
 

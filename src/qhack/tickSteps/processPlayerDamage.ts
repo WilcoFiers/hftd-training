@@ -1,6 +1,6 @@
 import { TickStep } from "../types"
 
-const processPlayerDamage: TickStep = ({ server, tickNum, playerAIs }) => {
+const processPlayerDamage: TickStep = ({ server }) => {
   const logs: string[] = []
   server = {
     ...server,
