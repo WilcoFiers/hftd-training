@@ -36,7 +36,7 @@
                 v-for="(threat, key) in threats" 
                 v-text="`${threat.name}, starts tick ${threat.startTick}`" 
                 :key="key"
-                @click="removethreat(key)"
+                @click="removeThreat(key)"
               />
             </v-list>
             <p v-else class="text-center">No threats selected</p>
@@ -70,8 +70,8 @@ export default Vue.extend({
   watch: {
     threatId(threatId) {
       const threat = this.dbThreats.find(({ id }) => id === threatId) as Threat
-      this.threatText = threat.description
-      if (threat.plans) {
+      this.threatText = threat?.description || ''
+      if (threat?.plans) {
         this.threatText += '\n' + threat.plans
       }
     }

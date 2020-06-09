@@ -2,18 +2,19 @@ import { TickSubstep, BruteForceAction, BruteForcePortAction } from '../types'
 import { findAllowedPortAction, incrementActionUses, lineParser } from '../utils'
 
 export const parser = (line: string): BruteForceAction | undefined => {
-  const bruteForceRegex = new RegExp(
-    // "brute force ", "force " "bruteforce " 
-    '^(brute\\s*)?force' +
-    // "all", ""
-    '(?<all>\\s+all)?' +
-    // "security system ","security sys", "security systems", ""
-    '(\\s+security)?(\\s+sys(tems?)?)?' +
-    // "1", "one", ""
-    '(\\s+(?<securitySystem>[0-9a-z]+))?',
-    // Flags:
-    'i'
-  )
+  const bruteForceRegex = /^(brute\s*)?force(?<all>\s+all)?(\s+security)?(\s+sys(tems?)?)?(\s+(?<securitySystem>[0-9a-z]+))?/i
+  // const bruteForceRegex = new RegExp(
+  //   // "brute force ", "force " "bruteforce " 
+  //   '^(brute\\s*)?force' +
+  //   // "all", ""
+  //   '(?<all>\\s+all)?' +
+  //   // "security system ","security sys", "security systems", ""
+  //   '(\\s+security)?(\\s+sys(tems?)?)?' +
+  //   // "1", "one", ""
+  //   '(\\s+(?<securitySystem>[0-9a-z]+))?',
+  //   // Flags:
+  //   'i'
+  // )
   const bruteForceMatch = bruteForceRegex.exec(line)?.groups
   if (!bruteForceMatch) {
     return undefined

@@ -13,16 +13,17 @@ const numberMap: { [prop: string]: number } = {
 
 export function tickLimit(line: string): {} | { tick_limit: number } {
   // "...one use per tick", "two user per tick"
-  const wordRegex = new RegExp(
-    // "[numbers]"
-    '(?<word>one|two|three|four|five|six|seven|eight|nine|ten)' +
-    // " uses", " users", " times"
-    '\s+(user?s?|times)' +
-    // " per tick"
-    '\s+per\s+tick',
-    // Regex flags:
-    'gi'
-  )
+  const wordRegex = /(?<word>one|two|three|four|five|six|seven|eight|nine|ten)\s+(user?s?|times)\s+per\s+tick/gi
+  // const wordRegex = new RegExp(
+  //   // "[numbers]"
+  //   '(?<word>one|two|three|four|five|six|seven|eight|nine|ten)' +
+  //   // " uses", " users", " times"
+  //   '\s+(user?s?|times)' +
+  //   // " per tick"
+  //   '\s+per\s+tick',
+  //   // Regex flags:
+  //   'gi'
+  // )
   const wordMatch = wordRegex.exec(line)?.groups
   if (wordMatch) {
     return { tick_limit: numberMap[wordMatch.word] }
@@ -38,14 +39,15 @@ export function tickLimit(line: string): {} | { tick_limit: number } {
 
 export function hackLimit(line: string): {} | { hack_limit: number } {
   // "...one use per hack...", "...five uses per hack..."
-  const wordRegex = new RegExp(
-    // "[numbers]"
-    '(?<word>one|two|three|four|five|six|seven|eight|nine|ten)' +
-    // " use per hack", " uses per hack", " time per hack", " times per hack"
-    '\s+(user?s?|times?)\s+per\s+hack' +
-    // Regex flags:
-    'gi'
-  )
+  const wordRegex = /(?<word>one|two|three|four|five|six|seven|eight|nine|ten)\s+(user?s?|times?)\s+per\s+hack/gi
+  // const wordRegex = new RegExp(
+  //   // "[numbers]"
+  //   '(?<word>one|two|three|four|five|six|seven|eight|nine|ten)' +
+  //   // " use per hack", " uses per hack", " time per hack", " times per hack"
+  //   '\s+(user?s?|times?)\s+per\s+hack' +
+  //   // Regex flags:
+  //   'gi'
+  // )
   const wordMatch = wordRegex.exec(line)?.groups
   if (wordMatch) {
     return { hack_limit: numberMap[wordMatch.word] }
