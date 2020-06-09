@@ -1,5 +1,5 @@
 import { TickSubstep, ConnectAction } from '../types'
-import { findAllowedPortAction, incrementActionUses } from '../utils'
+import { findAllowedPortAction, incrementActionUses, lineParser } from '../utils'
 
 export const parser = (line: string): ConnectAction | undefined => {
   // "connect to port 3"
@@ -10,7 +10,9 @@ export const parser = (line: string): ConnectAction | undefined => {
   }
   return {
     type: 'connect to port',
-    to_port: match.to_port
+    to_port: match.to_port,
+    ...lineParser.tickLimit(line),
+    ...lineParser.hackLimit(line),
   }
 }
 
