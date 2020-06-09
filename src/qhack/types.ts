@@ -2,7 +2,6 @@ export { ThreatAction } from './threatActions'
 import { ThreatAction } from './threatActions'
 
 export type BasicActionTypes = 
-  'initial connect' | 
   'disconnect' | 
   'download data' | 
   'upload data' | 
@@ -13,6 +12,13 @@ export type BasicAction = {
   type: BasicActionTypes
   tick_limit?: number
   hack_limit?: number
+}
+
+export type InitialConnectAction = {
+  type: 'initial connect', 
+  to_port?: string
+  hack_limit?: number
+  tick_limit?: number
 }
 
 export type ConnectAction = {
@@ -61,11 +67,12 @@ export type AddNodesAction = {
   hack_limit?: number
 }
 
-type PlayerActionTypes = BasicAction | 'connect to port' | 'brute force' | 'link QPUs' | 'redirect QPUs' | 'add nodes'
+type PlayerActionTypes = BasicAction | 'initial connect' | 'connect to port' | 'brute force' | 'link QPUs' | 'redirect QPUs' | 'add nodes'
 type UnknownAction = { type: Exclude<string, PlayerActionTypes> }
 
 export type PlayerAction = 
   BasicAction | 
+  InitialConnectAction |
   ConnectAction | 
   BruteForceAction | 
   LinkQPUsAction | 
@@ -110,7 +117,13 @@ export type AddNodesPortAction = AddNodesAction & {
 }
 
 export type PortAction = 
-  BasicAction | ConnectAction | BruteForcePortAction | LinkQPUsPortAction | RedirectQPUsPortAction | AddNodesPortAction
+  BasicAction | 
+  InitialConnectAction | 
+  ConnectAction | 
+  BruteForcePortAction | 
+  LinkQPUsPortAction | 
+  RedirectQPUsPortAction | 
+  AddNodesPortAction
 
 export interface Port {
   qpu_start?: number
@@ -163,8 +176,7 @@ export interface Server {
 export interface ActiveServer extends Server {
   activeSecurity: {
     [securitySystem: number]: ActiveThreat[]
-  }
-  initial_port: string
+  },
   ports: ActivePortMap
   ticks_max: number,
   threats: ActiveThreat[],

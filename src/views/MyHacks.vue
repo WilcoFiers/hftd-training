@@ -13,7 +13,7 @@
         <p v-else>You have no hacks saved</p>
       </v-col>
       <v-col cols="12" sm="9" md="8">
-        <p><v-btn to="/hacks/new-aar">New AAR</v-btn></p>
+        <p><v-btn to="/create-aar">Create an AAR</v-btn></p>
       </v-col>
     </v-row>
   </v-container>

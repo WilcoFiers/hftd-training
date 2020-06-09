@@ -20,10 +20,10 @@ export const parser = (line: string): TraceRouteAttackAction | undefined => {
   if (!match || !match.groups) {
     return
   }
-
+  
   const tick_delay = getTickDelay(line)
   const remove_nodes = parseInt(match.groups.remove_nodes)
-  
+
   let traceRoute: number | 'all' 
   if (match.groups.traceRoute === 'all') {
     traceRoute = 'all'
@@ -32,7 +32,7 @@ export const parser = (line: string): TraceRouteAttackAction | undefined => {
   }
 
   // Check all of 'm parsed right
-  if (!tick_delay || isNaN(remove_nodes) || (traceRoute !== 'all' && isNaN(traceRoute))) {
+  if (tick_delay === undefined || isNaN(remove_nodes) || (traceRoute !== 'all' && isNaN(traceRoute))) {
     return 
   }
 

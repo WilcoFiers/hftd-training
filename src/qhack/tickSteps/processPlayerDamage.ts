@@ -13,7 +13,7 @@ const processPlayerDamage: TickStep = ({ server }) => {
     if (!threat || !threat.tickDamage || threat.health === undefined) {
       return;
     }
-    console.log('Damage is wrong, if atk 1 destroys, atk 2 goes to the second threat')
+
     const damage = Math.max(0, threat.tickDamage - (threat.damage_reduction || 0))
     let log = `${threat.name} takes ${damage} damage`
     if (threat.damage_reduction && threat.damage_reduction > 0) {

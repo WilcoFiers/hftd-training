@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test": "npm run test:unit",
+    "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
     "deploy": "vue-cli-service build && firebase deploy",
     "deploy:rules": "firebase deploy --only firestore:rules"
@@ -14,6 +15,7 @@
   "dependencies": {
     "core-js": "^3.5.0",
     "firebase": "^7.13.1",
+    "json-to-pretty-yaml": "^1.2.2",
     "partial-compare": "^1.0.1",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.2",

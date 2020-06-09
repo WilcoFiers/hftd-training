@@ -8,12 +8,7 @@ const serverDefaults = {
 
 function serverParser (server: Server): ActiveServer {
   const ports = getActivePorts(server)
-  const [initial_port = '1'] = Object.entries(ports).find(([, port]) => {
-    port.actions.some(({ type }) => type === 'initial connect')
-  }) || []
-
   return {
-    initial_port,
     threats: [],
     ports,
     traceRoutes: traceRouteParser(server),
@@ -32,6 +27,7 @@ function getActivePorts(server: Server): ActivePortMap {
   Object.entries(ports)
   .forEach(([key, port]) => {
     activePorts[key] = {
+      qpu_start: port.qpu_start,
       qpu_current: port.qpu_start || 0,
       qpu_max: Infinity,
       ...port,

@@ -20,6 +20,7 @@
           <v-btn @click="saveServer" class="secondary">
             <v-icon left>mdi-content-save</v-icon>Save
           </v-btn>
+          <v-textarea v-model="parsed" label="parsed server" rows="10" readonly />
         </v-form>
       </v-col>
     </v-row>
@@ -28,7 +29,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
+// @ts-ignore
+import YAML from 'json-to-pretty-yaml'
 import { Server } from '@/qhack/types'
+import serverParser from '@/qhack/parser/server'
 
 export default Vue.extend({
   name: 'ServerLayout',
@@ -39,13 +43,20 @@ export default Vue.extend({
     return {
       current: 0 as number,
       name: '' as string,
-      description: '' as string
+      description: '' as string,
     }
   },
 
   computed: {
     serverLayouts(): Server[] {
       return this.$store.state.hacks.serverLayouts as Server[]
+    },
+    parsed(): string {
+      const parsedServer = serverParser({
+        name: this.name,
+        description: this.description
+      })
+      return YAML.stringify(parsedServer)
     }
   },
 

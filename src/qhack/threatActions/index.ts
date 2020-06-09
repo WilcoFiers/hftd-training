@@ -28,7 +28,7 @@ export function threatActionParser({ plans, traceRoute }: Threat): ThreatAction[
   }
 
   const actionLines = plans.split('\n')
-    .filter(line => line.replace(/^[-*>]\s/, ''))
+    .map(line => line.replace(/^[-*>]\s/, ''))
 
   const actions: ThreatAction[] = []
   actionLines.forEach(line => {

@@ -21,6 +21,7 @@
           <v-btn @click="saveThreat" class="secondary">
             <v-icon left>mdi-content-save</v-icon>Save
           </v-btn>
+          <v-textarea v-model="parsed" label="parsed threat" rows="5" readonly />
         </v-form>
       </v-col>
     </v-row>
@@ -29,7 +30,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
+// @ts-ignore
+import YAML from 'json-to-pretty-yaml'
 import { Threat } from '@/qhack/types'
+import threatParser from '@/qhack/parser/threat'
 
 export default Vue.extend({
   name: 'Threats',
@@ -48,6 +52,16 @@ export default Vue.extend({
   computed: {
     threats(): (Threat & { id: string })[] {
       return this.$store.state.hacks.threats as (Threat & { id: string })[]
+    },
+    parsed(): string {
+      const parsedThreat = threatParser({
+        name: this.name,
+        description: this.description,
+        plans: this.plans,
+        startTick: 0,
+        traceRoute: '1'
+      })
+      return YAML.stringify(parsedThreat)
     }
   },
 
