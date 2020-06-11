@@ -76,6 +76,6 @@ export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }
   }
   
   const trText = action.traceRoute === 'all' ? 'all trace routes' : `trace route ${action.traceRoute}`
-  const log = `${trText} will lose ${action.remove_nodes} node${action.remove_nodes > 1 ? 's' : ''}.`
+  const log = `${trText} loses ${action.remove_nodes} node${action.remove_nodes > 1 ? 's' : ''}.`
   return { log, server }
 }

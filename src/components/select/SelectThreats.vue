@@ -101,7 +101,6 @@ export default Vue.extend({
       if (!this.form.validate()) {
         return
       }
-
       const dbThreat = this.dbThreats.find(({ id }) => id === this.threatId) as Threat
       const threat: Threat = {
         ...dbThreat,
@@ -116,6 +115,8 @@ export default Vue.extend({
       }
 
       this.$set(this.threats, this.threats.length, threat);
+
+      this.$emit('input', this.threats);
       this.form.reset()
     },
 

@@ -10,6 +10,7 @@
 - Damage is wrong, if atk 1 destroys, atk 2 goes to the second threat
 - Defaults are missing, allows multiple brute forces / links / etc. from the same port
 - fix capture groups prob: https://babeljs.io/docs/en/babel-plugin-transform-named-capturing-groups-regex
+- Parse "brute force sec sys 1+2"
 
 -- Go to public Alpha
 

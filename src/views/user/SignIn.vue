@@ -8,6 +8,7 @@
             <v-text-field
               label="E-mail"
               v-model="email"
+              name="email"
               :rules="[required, validEmail]"
             />
           </v-row>
@@ -17,6 +18,7 @@
               label="Password"
               v-model="password"
               type="password"
+              name="password"
               :rules="[required]"
             />
           </v-row>
