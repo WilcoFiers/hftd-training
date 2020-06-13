@@ -1,4 +1,5 @@
-import { TickSubstep, BasicAction } from '../types'
+import { TickSubstep } from '../types'
+import { BasicAction } from './index'
 
 export const parser = (line: string): BasicAction | undefined => {
   // "disconnect", "disconnected"

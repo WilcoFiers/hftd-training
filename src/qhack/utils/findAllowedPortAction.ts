@@ -11,17 +11,17 @@ function findAllowedPortAction (
   let msg = `tried to ${playerAction.type}`
   if (playerAction.type === 'connect to port') {
     // @ts-ignore
-    msg += ` ${playerAction.to_port}`
+    msg += ` ${playerAction.toPort}`
   }
 
-  if (!playerAI.current_port) {
+  if (!playerAI.currentPort) {
     throw new Error(`${msg}; AI not connected`);
   }
 
-  const port = server.ports[playerAI.current_port]
+  const port = server.ports[playerAI.currentPort]
   const portBruteForceActions = port.actions.filter(({ type }) => type === playerAction.type)
   if (portBruteForceActions.length === 0) {
-    throw new Error(`${msg}; no ${playerAction.type} action on port ${playerAI.current_port}`);
+    throw new Error(`${msg}; no ${playerAction.type} action on port ${playerAI.currentPort}`);
   }
 
   const possibleActions = portBruteForceActions.filter(action => {
@@ -29,15 +29,15 @@ function findAllowedPortAction (
   })
 
   if (possibleActions.length === 0) {
-    throw new Error(`${msg}; no matching ${playerAction.type} action found on port ${playerAI.current_port}`);
+    throw new Error(`${msg}; no matching ${playerAction.type} action found on port ${playerAI.currentPort}`);
   } else if (possibleActions.length > 1) {
-    throw new Error(`${msg}; multiple matching ${playerAction.type} actions found on port ${playerAI.current_port}`);
+    throw new Error(`${msg}; multiple matching ${playerAction.type} actions found on port ${playerAI.currentPort}`);
   }
 
   const portAction = possibleActions[0]
-  if (portAction.hack_limit && (portAction.hack_uses || 0) >= portAction.hack_limit) {
+  if (portAction.hackLimit && (portAction.hackUses || 0) >= portAction.hackLimit) {
     throw new Error(`${msg}; action can not be used again this hack`)
-  } else if (portAction.tick_limit && (portAction.tick_uses || 0) >= portAction.tick_limit) {
+  } else if (portAction.tickTimit && (portAction.tickUses || 0) >= portAction.tickTimit) {
     throw new Error(`${msg}; action can not be used again this tick`)
   }
 

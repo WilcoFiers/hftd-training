@@ -1,17 +1,33 @@
-import { TickSubstep, BruteForceAction, BruteForcePortAction } from '../types'
+import { TickSubstep } from '../types'
 import { findAllowedPortAction, incrementActionUses, lineParser } from '../utils'
 
+export type BruteForceAction = {
+  type: 'brute force'
+  securitySystem?: number | 'all',
+  damage?: number
+  qpuCost?: number
+  fromPort?: string
+  tickTimit?: number
+  hackLimit?: number
+}
+
+export type BruteForcePortAction = BruteForceAction & {
+  securitySystem: number | 'all',
+  damage: number,
+  fromPort: string,
+}
+
 export const parser = (line: string): BruteForceAction | undefined => {
-  const bruteForceRegex = /^(brute\s*)?force(?<all>\s+all)?(\s+security)?(\s+sys(tems?)?)?(\s+(?<securitySystem>[0-9a-z]+))?/i
+  const bruteForceRegex = /^(brute\s*)?force(?<all>\s+all)?(\s+sec(urity)?)?(\s+sys(tems?)?)?(\s+(?<securitySystem>[0-9a-z]+))?/i
   // const bruteForceRegex = new RegExp(
   //   // "brute force ", "force " "bruteforce " 
   //   '^(brute\\s*)?force' +
   //   // "all", ""
   //   '(?<all>\\s+all)?' +
-  //   // "security system ","security sys", "security systems", ""
-  //   '(\\s+security)?(\\s+sys(tems?)?)?' +
+  //   // "security system ","security sys", "security systems", "", "sec sys"
+  //   '(\\s+sec(urity)?)?(\\s+sys(tems?)?)?' +
   //   // "1", "one", ""
-  //   '(\\s+(?<securitySystem>[0-9a-z]+))?',
+  //   '(\\s+(?<securitySystem>[0-9a-z+,&]+))?',
   //   // Flags:
   //   'i'
   // )
@@ -33,15 +49,15 @@ export const parser = (line: string): BruteForceAction | undefined => {
   }
 
   // "Costs 1"
-  const costMatch = /costs\s+(?<qpu_cost>[0-9]+)/gi.exec(line)?.groups
+  const costMatch = /costs\s+(?<qpuCost>[0-9]+)/gi.exec(line)?.groups
   if (costMatch) {
-    baseAction.qpu_cost = parseInt(costMatch.qpu_cost)
+    baseAction.qpuCost = parseInt(costMatch.qpuCost)
   }
 
   // "port 1"
-  const portMatch = /port\s+(?<from_port>[0-9a-z]+)/i.exec(line)?.groups
+  const portMatch = /port\s+(?<fromPort>[0-9a-z]+)/i.exec(line)?.groups
   if (portMatch) {
-    baseAction.from_port = portMatch.from_port
+    baseAction.fromPort = portMatch.fromPort
   }
 
   return {
@@ -61,18 +77,18 @@ export const runner: TickSubstep = ({ action, playerAI, server }) => {
     return { log: e.message }
   }
 
-  const portId = playerAI.current_port as string
+  const portId = playerAI.currentPort as string
   const port = server.ports[portId]
-  if (port.qpu_current < (portAction.qpu_cost || 0)) {
-    return { log: `tried to brute force; port ${portAction.from_port} needs ${portAction.qpu_cost} QPUs, but only has ${port.qpu_current}` }
-  } else if (portAction.qpu_cost) {
+  if (port.qpuCurrent < (portAction.qpuCost || 0)) {
+    return { log: `tried to brute force; port ${portAction.fromPort} needs ${portAction.qpuCost} QPUs, but only has ${port.qpuCurrent}` }
+  } else if (portAction.qpuCost) {
     server = {
       ...server,
       ports: {
         ...server.ports,
         [portId]: {
           ...port,
-          qpu_current: port.qpu_current - portAction.qpu_cost
+          qpuCurrent: port.qpuCurrent - portAction.qpuCost
         }
       }
     }

@@ -2,7 +2,7 @@ import { PlayerAI, ActivePlayerAI, PlayerAction } from '../types'
 import { playerActionParser } from '../playerActions'
 
 const playerAIDefaults = {
-  current_port: undefined,
+  currentPort: undefined,
   disconnected: false
 }
 

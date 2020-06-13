@@ -1,5 +1,19 @@
-import { TickSubstep, LinkQPUsAction, LinkQPUsPortAction } from '../types'
+import { TickSubstep } from '../types'
 import { findAllowedPortAction, incrementActionUses, lineParser } from '../utils'
+
+export type LinkQPUsAction = {
+  type: 'link QPUs',
+  toPort?: string
+  fromPort?: string
+  QPUs?: number
+  tickTimit?: number
+  hackLimit?: number
+}
+
+export type LinkQPUsPortAction = LinkQPUsAction & {
+  QPUs: number,
+  toPort: string
+}
 
 export const parser = (line: string): LinkQPUsAction | undefined => {
   // "link 4...", "Link 4..."
@@ -31,13 +45,13 @@ export const runner: TickSubstep = ({ action, server, playerAI }) => {
   } catch (e) {
     return { log: e.message }
   }
-  const toPort = portAction.to_port
+  const toPort = portAction.toPort
   const port = server.ports[toPort];
-  const qpu_current = Math.min(port.qpu_max, port.qpu_current + portAction.QPUs)
-  const newQPUs = qpu_current - port.qpu_current
+  const qpuCurrent = Math.min(port.qpuMax, port.qpuCurrent + portAction.QPUs)
+  const newQPUs = qpuCurrent - port.qpuCurrent
   
   let log = `linked ${newQPUs} QPU${ portAction.QPUs === 1 ? '' : 's'} to port ${toPort}`
-  if (port.qpu_current + portAction.QPUs > port.qpu_max) {
+  if (port.qpuCurrent + portAction.QPUs > port.qpuMax) {
     log += `; port has no space for ${portAction.QPUs} additional QPUs`
   }
   server = incrementActionUses(portAction, {
@@ -46,7 +60,7 @@ export const runner: TickSubstep = ({ action, server, playerAI }) => {
       ...server.ports,
       [toPort]: {
         ...port,
-        qpu_current
+        qpuCurrent
       }
     }
   })

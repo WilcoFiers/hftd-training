@@ -4,8 +4,8 @@ const getServerStatus: TickStep = ({ server }) => {
   const logs: string[] = []
   let serverFail = false;
   Object.entries(server.traceRoutes)
-  .forEach(([key, { nodes, nodes_max }]) => {
-    logs.push(`Nodes in trace route ${key}: ${nodes}/${nodes_max}`)
+  .forEach(([key, { nodes, nodesMax }]) => {
+    logs.push(`Nodes in trace route ${key}: ${nodes}/${nodesMax}`)
     if (nodes <= 0) {
       serverFail = true
     }
@@ -13,7 +13,7 @@ const getServerStatus: TickStep = ({ server }) => {
 
   // Object.entries(server.ports)
   // .forEach(([key, port]) => {
-  //   logs.push(`Port ${key} has ${port.qpu_current} QPUs`)
+  //   logs.push(`Port ${key} has ${port.qpuCurrent} QPUs`)
   // })
 
   if (serverFail) {

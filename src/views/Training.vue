@@ -81,7 +81,6 @@ import { generate } from '@/quantum-hack/report'
 import { QuantumServer, Player, Command, Threat } from '@/quantum-hack/types'
 import Timer from '@/components/Timer.vue'
 import TextCopy from '@/components/TextCopy.vue'
-import { formattedTime } from '@/utils/formatTime'
 
 const planDefaults: string[] = [
   'T0: Initial connect',

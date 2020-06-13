@@ -40,17 +40,17 @@ export function parsePort(portString: string): [string, Port] | [] {
   const port: Port = { actions: [] }
 
   // ... 0 / 1 QPUs ... OR: 1 QPU
-  const qpuRegex = /(?<qpu_start>[0-9]+)(\s?(\/|of)\s?(?<qpu_max>[0-9]+))?\s?QPUs?/gi
+  const qpuRegex = /(?<qpuStart>[0-9]+)(\s?(\/|of)\s?(?<qpuMax>[0-9]+))?\s?QPUs?/gi
   const qpuMatch = qpuRegex.exec(portString)?.groups
   if (qpuMatch) {
-    const qpu_start = parseInt(qpuMatch.qpu_start)
-    if (!isNaN(qpu_start)) {
-      port.qpu_start = qpu_start
+    const qpuStart = parseInt(qpuMatch.qpuStart)
+    if (!isNaN(qpuStart)) {
+      port.qpuStart = qpuStart
     }
 
-    const qpu_max = parseInt(qpuMatch.qpu_max)
-    if (!isNaN(qpu_max)) {
-      port.qpu_max = qpu_max
+    const qpuMax = parseInt(qpuMatch.qpuMax)
+    if (!isNaN(qpuMax)) {
+      port.qpuMax = qpuMax
     }
   }
 

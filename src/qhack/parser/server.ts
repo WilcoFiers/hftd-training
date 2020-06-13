@@ -2,7 +2,7 @@ import { Server, ActiveServer, ActivePortMap, TraceRoute } from '../types'
 import { getPortMap } from './port'
 
 const serverDefaults = {
-  ticks_max: 10,
+  ticksMax: 10,
   activeSecurity: {}
 }
 
@@ -27,9 +27,9 @@ function getActivePorts(server: Server): ActivePortMap {
   Object.entries(ports)
   .forEach(([key, port]) => {
     activePorts[key] = {
-      qpu_start: port.qpu_start,
-      qpu_current: port.qpu_start || 0,
-      qpu_max: Infinity,
+      qpuStart: port.qpuStart,
+      qpuCurrent: port.qpuStart || 0,
+      qpuMax: Infinity,
       ...port,
     }
   });
@@ -42,18 +42,18 @@ function traceRouteParser({ description }: Server): TraceRouteMap {
   const lines = description.split('\n')
   const traceRoutes: TraceRouteMap = {}
   for (const line of lines) {
-    const trRegex = /Nodes? in (Trace Route|TR) (?<routeId>[0-9]+)[,;\s].*(?<nodes>[0-9]+)\s?(\/|of)\s?(?<nodes_max>[0-9]+)/gi
+    const trRegex = /Nodes? in (Trace Route|TR) (?<routeId>[0-9]+)[,;\s].*(?<nodes>[0-9]+)\s?(\/|of)\s?(?<nodesMax>[0-9]+)/gi
     const match = trRegex.exec(line)?.groups
     if (!match) {
       continue;
     }
     const nodes = parseInt(match.nodes)
-    const nodes_max = parseInt(match.nodes_max)
-    if (isNaN(nodes) || isNaN(nodes_max)) {
+    const nodesMax = parseInt(match.nodesMax)
+    if (isNaN(nodes) || isNaN(nodesMax)) {
       continue;
     }
 
-    traceRoutes[match.routeId] = { nodes, nodes_max }
+    traceRoutes[match.routeId] = { nodes, nodesMax }
   }
   return traceRoutes
 }

@@ -14,10 +14,10 @@ const processPlayerDamage: TickStep = ({ server }) => {
       return;
     }
 
-    const damage = Math.max(0, threat.tickDamage - (threat.damage_reduction || 0))
+    const damage = Math.max(0, threat.tickDamage - (threat.damageReduction || 0))
     let log = `${threat.name} takes ${damage} damage`
-    if (threat.damage_reduction && threat.damage_reduction > 0) {
-      log += ` (ignoring ${Math.min(threat.damage_reduction, threat.tickDamage)})`
+    if (threat.damageReduction && threat.damageReduction > 0) {
+      log += ` (ignoring ${Math.min(threat.damageReduction, threat.tickDamage)})`
     }
 
     if (damage >= threat.health) {

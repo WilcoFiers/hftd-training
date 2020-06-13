@@ -5,7 +5,50 @@ import * as bruteForce from './bruteForce'
 import * as linkQPUs from './linkQPUs'
 import * as redirectQPUs from './redirectQPUs'
 import * as addNodes from './addNodes'
-import { TickSubstep, PlayerAction, PortAction } from '../types';
+import { TickSubstep } from '../types';
+
+export type BasicActionTypes = 
+  'disconnect' | 
+  'download data' | 
+  'upload data' | 
+  'edit data' | 
+  'idle'
+
+type PlayerActionTypes = 
+  BasicAction | 
+  'initial connect' | 
+  'connect to port' | 
+  'brute force' | 
+  'link QPUs' | 
+  'redirect QPUs' | 
+  'add nodes'
+
+type UnknownAction = { type: Exclude<string, PlayerActionTypes> }
+
+export type BasicAction = {
+  type: BasicActionTypes
+  tickTimit?: number
+  hackLimit?: number
+}
+
+export type PlayerAction = 
+  BasicAction | 
+  addNodes.AddNodesAction |
+  bruteForce.BruteForceAction | 
+  connectToPort.ConnectAction | 
+  initialConnect.InitialConnectAction |
+  linkQPUs.LinkQPUsAction | 
+  redirectQPUs.RedirectQPUsAction | 
+  UnknownAction
+
+export type PortAction = 
+  BasicAction | 
+  addNodes.AddNodesPortAction |
+  bruteForce.BruteForcePortAction | 
+  connectToPort.ConnectAction | 
+  initialConnect.InitialConnectAction | 
+  linkQPUs.LinkQPUsPortAction | 
+  redirectQPUs.RedirectQPUsPortAction
 
 type Actions = { [actionName: string]: TickSubstep }
 

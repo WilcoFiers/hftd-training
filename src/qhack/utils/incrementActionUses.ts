@@ -9,8 +9,8 @@ function incrementActionUses(currentAction: ActivePortAction, server: ActiveServ
       }
       return {
         ...action,
-        tick_uses: (action.tick_uses || 0) + 1,
-        hack_uses: (action.hack_uses || 0) + 1
+        tickUses: (action.tickUses || 0) + 1,
+        hackUses: (action.hackUses || 0) + 1
       }
     })
 

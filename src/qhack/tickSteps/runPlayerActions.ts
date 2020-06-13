@@ -42,7 +42,7 @@ function resetTickUses(server: ActiveServer): ActiveServer {
       ...port,
       actions: port.actions.map(action => ({
         ...action,
-        tick_uses: 0
+        tickUses: 0
       }))
     }
   })

@@ -12,7 +12,7 @@ export default function runServerHack({ server, threats, playerAIs }: Hack ): Ti
   let activePlayerAIs: ActivePlayerAI[] = playerAIs.map(parsePlayer)
   
   const tickLogs: TickLog[] = []
-  for (let tickNum = 0; tickNum < activeServer.ticks_max; tickNum++) {
+  for (let tickNum = 0; tickNum < activeServer.ticksMax; tickNum++) {
     const tickResult = runTick(tickNum, activeServer, activePlayerAIs)
 
     activeServer = tickResult.server

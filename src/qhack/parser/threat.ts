@@ -15,9 +15,9 @@ function threatParser (threat: Threat): ActiveThreat {
     activeThreat.healthMax = health
   }
   
-  const damage_reduction = getDamageReduction(threat)
-  if (damage_reduction) {
-    activeThreat.damage_reduction = damage_reduction
+  const damageReduction = getDamageReduction(threat)
+  if (damageReduction) {
+    activeThreat.damageReduction = damageReduction
   }
   return activeThreat
 }

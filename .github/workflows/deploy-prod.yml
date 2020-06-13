@@ -14,8 +14,12 @@ jobs:
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
-      - name: Run tests
-        run: npm run test
+      - name: Linting
+        run: npm run lint
+      - name: Unit tests
+        run: npm run test:unit
+      - name: E2E tests
+        run: npm run test:e2e -- --headless
 
   build:
     name: Build
