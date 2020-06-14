@@ -1,5 +1,4 @@
-name: deploy_to_firebase
-
+name: Deploy to firebase
 on:
   push:
     branches:
@@ -17,11 +16,9 @@ jobs:
             ~/.npm
             ~/.cache/Cypress
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      - run: npm install
-      - name: Linting
-        run: npm run lint
-      - name: Unit tests
-        run: npm run test:unit
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:unit
 
   build:
     name: Build
@@ -35,7 +32,7 @@ jobs:
             ~/.npm
             ~/.cache/Cypress
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      - run: npm install
+      - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v2
         with:
@@ -54,7 +51,7 @@ jobs:
             ~/.npm
             ~/.cache/Cypress
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      - run: npm install
+      - run: npm ci
       - uses: actions/download-artifact@v2
         with:
           name: dist
