@@ -27,8 +27,9 @@ jobs:
           spec: "tests/e2e/**/*"
           env: true
         env:
-          HFTD_USER_EMAIL:  ${{ secrets.HFTD_USER_EMAIL }}
-          HFTD_USER_PASSWORD:  ${{ secrets.HFTD_USER_PASSWORD }}
+          CYPRESS_HFTD_USER_EMAIL:  ${{ secrets.HFTD_USER_EMAIL }}
+          CYPRESS_HFTD_USER_PASSWORD:  ${{ secrets.HFTD_USER_PASSWORD }}
+          CYPRESS_BASE_URL: http://localhost:8080/
 
   build:
     name: Build
