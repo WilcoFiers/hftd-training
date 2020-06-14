@@ -5,8 +5,8 @@ on:
       - master
 
 jobs:
-  install:
-    name: Install
+  test:
+    name: Test & deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,56 +17,9 @@ jobs:
             ~/.cache/Cypress
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm ci
-
-  test:
-    name: Test
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.npm
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm run lint
       - run: npm run test:unit
-
-  build:
-    name: Build
-    needs: [install, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.npm
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
       - run: npm run build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
-
-  cypress:
-    name: Cypress E2E
-    needs: [install, build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.npm
-            ~/.cache/Cypress
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
       - uses: cypress-io/github-action@v1
         with:
           install: false
@@ -79,17 +32,6 @@ jobs:
           CYPRESS_HFTD_USER_EMAIL:  ${{ secrets.HFTD_USER_EMAIL }}
           CYPRESS_HFTD_USER_PASSWORD:  ${{ secrets.HFTD_USER_PASSWORD }}
           CYPRESS_BASE_URL: http://localhost:8080/
-
-  deploy:
-    name: Deploy
-    needs: [test, build, cypress]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-          path: dist
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@v1.3.1
         with:
