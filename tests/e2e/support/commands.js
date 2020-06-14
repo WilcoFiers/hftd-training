@@ -13,4 +13,5 @@ Cypress.Commands.add('login', (userName, password) => {
   cy.get('input[name=email]').type(userName || Cypress.env('HFTD_USER_EMAIL'))
   cy.get('input[name=password]').type(password || Cypress.env('HFTD_USER_PASSWORD'))
   cy.get('button[type=submit]').click()
+  cy.url().should('match', /\/#\/$/)
 });

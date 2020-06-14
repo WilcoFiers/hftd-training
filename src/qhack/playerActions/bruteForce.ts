@@ -1,6 +1,8 @@
 import { TickSubstep } from '../types'
 import { findAllowedPortAction, incrementActionUses, lineParser } from '../utils'
 
+export const type = 'brute force'
+
 export type BruteForceAction = {
   type: 'brute force'
   securitySystem?: number | 'all',
@@ -9,6 +11,7 @@ export type BruteForceAction = {
   fromPort?: string
   tickTimit?: number
   hackLimit?: number
+  bonusDamage?: number
 }
 
 export type BruteForcePortAction = BruteForceAction & {
@@ -18,7 +21,7 @@ export type BruteForcePortAction = BruteForceAction & {
 }
 
 export const parser = (line: string): BruteForceAction | undefined => {
-  const bruteForceRegex = /^(brute\s*)?force(?<all>\s+all)?(\s+sec(urity)?)?(\s+sys(tems?)?)?(\s+(?<securitySystem>[0-9a-z]+))?/i
+  const bruteForceRegex = /^((?<special>[!])\s*)?(brute\s*)?force(?<all>\s+all)?(\s+sec(urity)?)?(\s+sys(tems?)?)?(\s+(?<securitySystem>[0-9a-z]+))?/i
   // const bruteForceRegex = new RegExp(
   //   // "brute force ", "force " "bruteforce " 
   //   '^(brute\\s*)?force' +
@@ -35,7 +38,10 @@ export const parser = (line: string): BruteForceAction | undefined => {
   if (!bruteForceMatch) {
     return undefined
   }
-  const baseAction: BruteForceAction = { type: 'brute force' }
+  const baseAction: BruteForceAction = { type }
+  if (bruteForceMatch.special === '!') {
+    baseAction.bonusDamage = 3;
+  }
 
   if (bruteForceMatch.all) {
     baseAction.securitySystem = 'all'
@@ -68,11 +74,14 @@ export const parser = (line: string): BruteForceAction | undefined => {
   }
 }
 
-
 export const runner: TickSubstep = ({ action, playerAI, server }) => {
-  let portAction: BruteForcePortAction 
+  let portAction: BruteForcePortAction
+  const playerAction = { ...action } as BruteForceAction
+  const { bonusDamage = 0 } = playerAction;
+  delete playerAction.bonusDamage
+
   try {
-    portAction = findAllowedPortAction(action, playerAI, server) as BruteForcePortAction
+    portAction = findAllowedPortAction(playerAction, playerAI, server) as BruteForcePortAction
   } catch (e) {
     return { log: e.message }
   }
@@ -93,12 +102,23 @@ export const runner: TickSubstep = ({ action, playerAI, server }) => {
       }
     }
   }
+  
+  let damage = portAction.damage
+  if (bonusDamage) {
+    if (portAction.securitySystem === 'all') {
+      damage += bonusDamage
+    } else {
+      const activeSystems = Object.values(server.activeSecurity)
+      .reduce((sum, [threat]) => sum + (threat ? 1 : 0), 0)
+      damage += Math.floor(bonusDamage / activeSystems) || 1
+    }
+  }
 
   Object.entries(server.activeSecurity)
   .forEach(([index, [threat]]) => {
     const num = parseInt(index)
     if (threat && [num, 'all'].includes(portAction.securitySystem)) {
-      threat.tickDamage = portAction.damage + (threat.tickDamage || 0)
+      threat.tickDamage = damage + (threat.tickDamage || 0)
     }
   })
 
@@ -106,7 +126,7 @@ export const runner: TickSubstep = ({ action, playerAI, server }) => {
     portAction.securitySystem === 'all'
       ? 'all security systems'
       : 'security system ' + portAction.securitySystem
-  }, dealing ${portAction.damage} damage`
+  }, dealing ${damage} damage`
 
   server = incrementActionUses(portAction, server)
   return { log, server }
