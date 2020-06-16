@@ -1,5 +1,5 @@
 import { ThreatActionMethod } from '../types'
-import { runAfterDisconnect, getTickDelay } from '../utils'
+import { haveDisconnected, getTickDelay } from '../utils'
 
 export const type = 'heal damage'
 
@@ -29,7 +29,7 @@ export const parser = (line: string): HealDamageAction | undefined => {
 
 export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }) => {
   // Don't run after players have disconnected
-  if (action.type !== type || !runAfterDisconnect({ playerAIs, threat })) {
+  if (action.type !== type || haveDisconnected(playerAIs)) {
     return {}
   }
   const { health, healthMax } = threat

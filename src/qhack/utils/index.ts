@@ -1,13 +1,13 @@
 import findAllowedPortAction from './findAllowedPortAction'
 import incrementActionUses from './incrementActionUses'
 import lineParser from './lineParser'
-import runAfterDisconnect from './runAfterDisconnect'
+import haveDisconnected from './haveDisconnected'
 import getTickDelay from './getTickDelay'
 
 export { 
   findAllowedPortAction, 
   incrementActionUses, 
   lineParser, 
-  runAfterDisconnect, 
+  haveDisconnected, 
   getTickDelay
 }

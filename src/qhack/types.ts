@@ -44,8 +44,7 @@ export interface Threat {
   plans?: string
   startTick: number,
   securitySystem?: number,
-  traceRoute?: string,
-  afterDisconnect?: boolean,
+  traceRoute?: string
 }
 
 export interface ActiveThreat extends Threat {

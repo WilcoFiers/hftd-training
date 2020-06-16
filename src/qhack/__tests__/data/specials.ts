@@ -17,7 +17,15 @@ export const threats: Threat[] = [{
   traceRoute: '1',
   description: `At the start of {{tick}}, Security System {{sys}} starts tracing you.
 It needs 4 damage to be brute forced.`,
-  plans: `> After 1 ticks trace route loses 3 nodes`
+  plans: `> After 1 ticks trace route 1 loses 3 nodes`
+  }, {
+    name: 'Security program',
+    startTick: 1,
+    securitySystem: 1,
+    traceRoute: '1',
+    description: `At the start of {{tick}}, Security System {{sys}} starts tracing you.
+  It needs 4 damage to be brute forced.`,
+    plans: `> After 2 ticks trace route 1 loses 2 nodes, even if AIs disconnected`
   }]
 
 export const playerAIs: PlayerAI[] = [{
