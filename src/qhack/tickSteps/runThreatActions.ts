@@ -9,7 +9,7 @@ function getTickThreatActions(server: ActiveServer, tickNum: number): TickThreat
   Object.values(server.activeSecurity).forEach((threats) => {
     threats.forEach(threat => {
       threat.actions.forEach(action => {
-        if (threat.startTick + action.tick_delay === tickNum) { 
+        if (threat.startTick + action.tickDelay === tickNum) { 
           actions.push({ action, threat })
         }
       })

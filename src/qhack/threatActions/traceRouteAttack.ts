@@ -5,24 +5,24 @@ export const type = 'trace route attack'
 
 export type TraceRouteAttackAction = {
   type: 'trace route attack'
-  tick_delay: number
+  tickDelay: number
   traceRoute: number | 'all'
-  remove_nodes: number
+  removeNodes: number
 }
 
 export const parser = (line: string): TraceRouteAttackAction | undefined => {
   // "route Y will lose Z nodes"
-  const singleRouteRegex = /route\s(?<traceRoute>[0-9])\s(will\slose|loses)\s(?<remove_nodes>[0-9]+)\snode/i
+  const singleRouteRegex = /route\s(?<traceRoute>[0-9])\s(will\slose|loses)\s(?<removeNodes>[0-9]+)\snode/i
   // "all trace routes will lose Y nodes"
-  const allRouteRegex = /(?<traceRoute>all)(\strace)\sroutes(\swill)?\slose\s(?<remove_nodes>[0-9]+)\snode/i
+  const allRouteRegex = /(?<traceRoute>all)(\strace)\sroutes(\swill)?\slose\s(?<removeNodes>[0-9]+)\snode/i
 
   const match = singleRouteRegex.exec(line) || allRouteRegex.exec(line)
   if (!match || !match.groups) {
     return
   }
   
-  const tick_delay = getTickDelay(line)
-  const remove_nodes = parseInt(match.groups.remove_nodes)
+  const tickDelay = getTickDelay(line)
+  const removeNodes = parseInt(match.groups.removeNodes)
 
   let traceRoute: number | 'all' 
   if (match.groups.traceRoute === 'all') {
@@ -32,11 +32,11 @@ export const parser = (line: string): TraceRouteAttackAction | undefined => {
   }
 
   // Check all of 'm parsed right
-  if (tick_delay === undefined || isNaN(remove_nodes) || (traceRoute !== 'all' && isNaN(traceRoute))) {
+  if (tickDelay === undefined || isNaN(removeNodes) || (traceRoute !== 'all' && isNaN(traceRoute))) {
     return 
   }
 
-  return { type, tick_delay, traceRoute, remove_nodes }
+  return { type, tickDelay, traceRoute, removeNodes }
 }
 
 export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }) => {
@@ -45,8 +45,8 @@ export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }
     return {}
   }
 
-  if (typeof action.remove_nodes !== 'number') {
-    return { log: `ERROR: remove_nodes was not specified for "${threat.name}"` }
+  if (typeof action.removeNodes !== 'number') {
+    return { log: `ERROR: removeNodes was not specified for "${threat.name}"` }
   }
   if (!action.traceRoute) {
     return { log: `ERROR: traceRoute must be specified for "${threat.name}"`}
@@ -62,7 +62,7 @@ export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }
     const traceRoute = server.traceRoutes[action.traceRoute]
     server.traceRoutes[action.traceRoute] = {
       ...traceRoute,
-      nodes: Math.max(0, traceRoute.nodes - (action.remove_nodes || 0)),
+      nodes: Math.max(0, traceRoute.nodes - (action.removeNodes || 0)),
     }
 
   } else { // action.traceRoute === 'all'
@@ -70,12 +70,12 @@ export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }
     .forEach(([traceRouteId, traceRoute]) => {
       server.traceRoutes[traceRouteId] = {
         ...traceRoute,
-        nodes: Math.max(0, traceRoute.nodes - (action.remove_nodes || 0)),
+        nodes: Math.max(0, traceRoute.nodes - (action.removeNodes || 0)),
       }
     })
   }
   
   const trText = action.traceRoute === 'all' ? 'all trace routes' : `trace route ${action.traceRoute}`
-  const log = `${trText} loses ${action.remove_nodes} node${action.remove_nodes > 1 ? 's' : ''}.`
+  const log = `${trText} loses ${action.removeNodes} node${action.removeNodes > 1 ? 's' : ''}.`
   return { log, server }
 }

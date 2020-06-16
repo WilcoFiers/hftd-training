@@ -5,7 +5,7 @@ export const type = 'heal damage'
 
 export type HealDamageAction = {
   type: 'heal damage'
-  tick_delay: number
+  tickDelay: number
   healing: number
 }
 
@@ -17,14 +17,14 @@ export const parser = (line: string): HealDamageAction | undefined => {
     return
   }
   
-  const tick_delay = getTickDelay(line)
+  const tickDelay = getTickDelay(line)
   const healing = parseInt(match.healing)
 
   // Check all of 'm parsed right
-  if (!tick_delay || isNaN(healing)) {
+  if (!tickDelay || isNaN(healing)) {
     return 
   }
-  return { type, tick_delay, healing }
+  return { type, tickDelay, healing }
 }
 
 export const runner: ThreatActionMethod = ({ action, threat, server, playerAIs }) => {
